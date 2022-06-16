@@ -158,12 +158,11 @@ mvn package
 
 To learn more about RESTful web services and how to build them, see https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service^] for details about how to build the `system` service. The `inventory` service is built in a similar way.
 
+== Building the Container images with Paketo buildpacks
 
-== Building your Docker images with Paketo
+When building Docker images with the `docker build` command, you need a Dockerfile to instruct Docker on what you need inside of your final image. 
 
-== Building the Container images with Paketo buildpacks.
-
-When building Docker images with the `docker build` command, you need a Dockerfile to instruct Docker on what you need inside of your final image. While Paketo uses buildpacks to create your images. Buildpacks are a set of executables that are able to inspect your source code, create a buil plan for it and exeute that build plan. Paketo features include building your source without a Dockerfile, advanced cacheing for fastter build times, minimal application images that only include what is used and a software bill-of-materials (SBOM) so you can inspect the image Paketo built for you.
+While Paketo uses buildpacks to create your images. Buildpacks are a set of executables that are able to inspect your source code, create a buil plan for it and exeute that build plan. Paketo features include building your source without a Dockerfile, advanced cacheing for fastter build times, minimal application images that only include what is used and a software bill-of-materials (SBOM) so you can inspect the image Paketo built for you.
 
 Paketo Liberty buildpack provides the Open Liberty runtime to the builder orchestration to produce a Open Container Inivitiate (OCI) image that can run just about anywhere.
 
@@ -178,19 +177,31 @@ A Builder is comprised of several part which include the buildpacks, lifecycle a
 Next, construct your images with the following `pack build` command and the applicable flags to customize the build for the Open Liberty runtime:
 [role='command']
 ```
-pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
-pack build --path ./inventory --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java inventory:1.0-SNAPSHOT
+pack build --path ./system \
+--env BP_JAVA_APP_SERVER=liberty \
+--env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
+--env BP_LIBERTY_PROFILE=jakartaee9 \
+--buildpack paketo-buildpacks/eclipse-openj9 \
+--buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+
+pack build --path ./inventory \
+--env BP_JAVA_APP_SERVER=liberty \
+--env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
+--env BP_LIBERTY_PROFILE=jakartaee9 \
+--buildpack paketo-buildpacks/eclipse-openj9 \
+--buildpack paketo-buildpacks/java inventory:1.0-SNAPSHOT
 ```
 
 The following table describes the flags and environment variables supplied to customize your Paketo buildpacks:
 [cols="35, 100", options="header"]
 |===
-| *Flag*                        | *Description*
-| --path                        | Relative path to your application source code.
-| --buildpack                   | Buildpack to be included in the OCI build process.
-| --env BP_JAVA_APP_SERVER      | The application server to use, in the case it's `Liberty`
-| --env BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` information from Maven into the `pack build` process.
-| --env BP_LIBERTY_PROFILE      | The Liberty profile to use. Defaults to `full`.
+| *Flag*                  | *Description*
+| --path                  | Relative path to your application source code.
+| --buildpack             | Buildpack to be included in the OCI build process.
+| --env                   | Enviornment variables for the `pack build` process.
+| BP_JAVA_APP_SERVER      | The application server to use, in the case it's `Liberty`.
+| BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` information from Maven into the `pack build` process.
+| BP_LIBERTY_PROFILE      | The Liberty profile to use. Defaults to `full`.
 |===
 
 Learn more about Docker on the https://www.docker.com/what-docker[official Docker page^].
