@@ -19,7 +19,7 @@
 :page-seo-title: Containerizing and running Java microservices in Docker containers
 :page-seo-description: A getting started tutorial with examples of how to containerize or dockerize your Java microservices by building a container image and running the image as a Docker container.
 :guide-author: Open Liberty
-= Containerizing microservices with Paketo Buildpacks
+= Containerizing microservices with Paketo Buildpacks and Docker
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the  https://openliberty.io/guides/{projectid}.html[Open Liberty website].
@@ -159,13 +159,39 @@ mvn package
 To learn more about RESTful web services and how to build them, see https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service^] for details about how to build the `system` service. The `inventory` service is built in a similar way.
 
 
-== Building your Container images with Paketo
+== Building your Docker images with Paketo
 
-A Docker image is a binary file. It is made up of multiple layers and is used to run code in a Docker container. Images are built from instructions in Dockerfiles to create a containerized version of the application.
+== Building the Container images with Paketo buildpacks.
 
-A `Dockerfile` is a collection of instructions for building a Docker image that can then be run as a container. As each instruction is run in a `Dockerfile`, a new Docker layer is created. These layers, which are known as intermediate images, are created when a change is made to your Docker image.
+When building Docker images with the `docker build` command, you need a Dockerfile to instruct Docker on what you need inside of your final image. While Paketo uses buildpacks to create your images. Buildpacks are a set of executables that are able to inspect your source code, create a buil plan for it and exeute that build plan. Paketo features include building your source without a Dockerfile, advanced cacheing for fastter build times, minimal application images that only include what is used and a software bill-of-materials (SBOM) so you can inspect the image Paketo built for you.
 
-Every `Dockerfile` begins with a parent or base image over which various commands are run. For example, you can start your image from scratch and run commands that download and install a Java runtime, or you can start from an image that already contains a Java installation.
+Paketo Liberty buildpack provides the Open Liberty runtime to the builder orchestration to produce a Open Container Inivitiate (OCI) image that can run just about anywhere.
+
+To begin, we must have Pack CLI installed and set your default builder to a `paketo-buildpacks` builder with the following command:
+[role='command']
+```
+pack config default-builder gcr.io/paketo-buildpacks/builder:base
+```
+
+A Builder is comprised of several part which include the buildpacks, lifecycle and the stack. The buildpacks, as mentioned above, are the set of executables that will inspect your source code while the lifecycle is an orchestration that organizes the buildpacks and assembles the artifacts from the buildpacks in the final OCI image. Finally, the stack is comprised of two images being: the build image and the run image. The build image is the image used to create a devlopment environment for the lifecycle orchestration and the run image is the parent image that is going to be used for the final OCI image.
+
+Next, construct your images with the following `pack build` command and the applicable flags to customize the build for the Open Liberty runtime:
+[role='command']
+```
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+pack build --path ./inventory --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java inventory:1.0-SNAPSHOT
+```
+
+The following table describes the flags and environment variables supplied to customize your Paketo buildpacks:
+[cols="35, 100", options="header"]
+|===
+| *Flag*                        | *Description*
+| --path                        | Relative path to your application source code.
+| --buildpack                   | Buildpack to be included in the OCI build process.
+| --env BP_JAVA_APP_SERVER      | The application server to use, in the case it's `Liberty`
+| --env BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` information from Maven into the `pack build` process.
+| --env BP_LIBERTY_PROFILE      | The Liberty profile to use. Defaults to `full`.
+|===
 
 Learn more about Docker on the https://www.docker.com/what-docker[official Docker page^].
 
@@ -174,8 +200,8 @@ Now that your two images are built, you will run your microservices in Docker co
 
 [role='command']
 ```
-docker run -d --name system -p 9080:9080 system:1.0-SNAPSHOT
-docker run -d --name inventory -p 9081:9081 inventory:1.0-SNAPSHOT
+docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
+docker run --rm -d --name inventory -p 9081:9081 inventory:1.0-SNAPSHOT
 ```
 
 The following table describes the flags in these commands:
@@ -183,6 +209,7 @@ The following table describes the flags in these commands:
 [cols="15, 100", options="header"]
 |===
 | *Flag* | *Description*
+| --rm   | Removes the container when the container is stopped.
 | -d     | Runs the container in the background.
 | --name | Specifies a name for the container.
 | -p     | Maps the host ports to the container ports. For example: `-p <HOST_PORT>:<CONTAINER_PORT>`
@@ -354,7 +381,7 @@ Run the Maven `package` goal to compile the test classes. Run the Maven `failsaf
 [role='command']
 ```
 mvn package
-mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9091 -Dsystem.http.port=9080
+mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9081 -Dsystem.http.port=9080
 ```
 endif::[]
 
