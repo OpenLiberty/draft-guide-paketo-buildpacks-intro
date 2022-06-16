@@ -217,7 +217,7 @@ docker run --rm -d --name inventory -p 9081:9081 inventory:1.0-SNAPSHOT
 
 The following table describes the flags in these commands:
 
-[cols="15, 100", options="header"]
+[cols="20, 100", options="header"]
 |===
 | *Flag* | *Description*
 | --rm   | Removes the container when the container is stopped.
