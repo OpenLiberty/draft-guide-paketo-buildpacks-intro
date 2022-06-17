@@ -57,17 +57,7 @@ include::{common-includes}/gitclone.adoc[]
 == Packaging your microservices
 
 // static guide instructions:
-ifndef::cloud-hosted[]
 Navigate to the `start` directory to begin.
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-To begin, run the following command to navigate to the **start** directory:
-```bash
-cd start
-```
-endif::[]
 
 You can find the starting Java project in the `start` directory. This project is a multi-module Maven project that is made up of the `system` and `inventory` microservices. Each microservice is located in its own corresponding directory, `system` and `inventory`.
 
@@ -78,7 +68,6 @@ mvn -pl system liberty:run
 ```
 
 // static guide instructions:
-ifndef::cloud-hosted[]
 Open another command-line session and run the following Maven goal to build the `inventory` microservice and run it inside Open Liberty:
 [role='command']
 ```
@@ -97,58 +86,14 @@ To access the `inventory` service, which displays the current contents of the in
 To access the `system` service, which shows the system properties of the running JVM, see http://localhost:9080/system/properties[^].
 
 You can add the system properties of your localhost to the `inventory` service at http://localhost:9081/inventory/systems/localhost[http://localhost:9081/inventory/systems/localhost^].
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-Select **Terminal** > **New Terminal** from the menu of the IDE to open another command-line session and run the following Maven goal to build the **inventory** microservice and run it inside Open Liberty:
-```bash
-cd /home/project/guide-containerize-paketo/start
-mvn -pl inventory liberty:run
-```
-
-Select **Terminal** > **New Terminal** from the menu of the IDE to open a new command-line session. To access the **inventory** service, which displays the current contents of the inventory, run the following curl command: 
-```bash
-curl -s http://localhost:9081/inventory/systems | jq
-```
-
-After you see the following message in both command-line sessions, both of your services are ready:
-
-```
-The defaultServer server is ready to run a smarter planet.
-```
-
-The **system** service shows the system properties of the running JVM and can be found by running the following curl command:
-```bash
-curl -s http://localhost:9080/system/properties | jq
-```
-
-The system properties of your localhost can be added to the **inventory** service at **http://localhost:9081/inventory/systems/localhost**. Run the following curl command:
-```bash
-curl -s http://localhost:9081/inventory/systems/localhost | jq
-```
-endif::[]
 
 // static guide instructions:
-ifndef::cloud-hosted[]
 After you are finished checking out the microservices, stop the Open Liberty servers by pressing `CTRL+C` in the command-line sessions where you ran the servers. Alternatively, you can run the `liberty:stop` goal in another command-line session:
 [role='command']
 ```
 mvn -pl system liberty:stop
 mvn -pl inventory liberty:stop
 ```
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-After you are finished checking out the microservices, stop the Open Liberty servers by pressing **CTRL+C** in the command-line sessions where you ran the servers. Alternatively, you can run the **liberty:stop** goal in another command-line session from the 
-**start** directory:
-```bash
-cd /home/project/guide-containerize/start
-mvn -pl system liberty:stop
-mvn -pl inventory liberty:stop
-```
-endif::[]
 
 To package your microservices, run the Maven package goal to build the application `.war` files from the start directory so that the `.war` files are in the `system/target` and `inventory/target` directories.
 [role='command']
@@ -261,17 +206,7 @@ CONTAINER ID    IMAGE                   COMMAND                  CREATED        
 If a problem occurs and your containers exit prematurely, the containers don't appear in the container list that the `docker ps` command displays. Instead, your containers appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` and `docker logs inventory` commands to view the container logs for any potential problems. Run the `docker stats system` and `docker stats inventory` commands to display a live stream of usage statistics for your containers. You can also double-check that your Dockerfiles are correct. When you find the cause of the issues, remove the faulty containers with the `docker rm system` and `docker rm inventory` commands. Rebuild your images, and start the containers again.
 
 // static guide instructions:
-ifndef::cloud-hosted[]
 To access the application, go to the http://localhost:9081/inventory/systems[http://localhost:9081/inventory/systems^] URL. An empty list is expected because no system properties are stored in the inventory yet. 
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-To access the application, run the following curl command. An empty list is expected because no system properties are stored in the inventory yet:
-```bash
-curl -s http://localhost:9081/inventory/systems | jq
-```
-endif::[]
 
 Next, retrieve the `system` container's IP address by running the following:
 
@@ -290,23 +225,7 @@ The command returns the system container IP address:
 In this case, the IP address for the `system` service is `172.17.0.2`. Take note of this IP address to construct the URL to view the system properties. 
 
 // static guide instructions:
-ifndef::cloud-hosted[]
 Go to the `\http://localhost:9081/inventory/systems/pass:c[[system-ip-address]]` URL by replacing `[system-ip-address]` with the IP address that you obtained earlier. You see a result in JSON format with the system properties of your local JVM. When you go to this URL, these system properties are automatically stored in the inventory. Go back to the http://localhost:9081/inventory/systems[http://localhost:9081/inventory/systems^] URL and you see a new entry for `[system-ip-address]`.
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-Run the following commands to go to the **http://localhost:9081/inventory/systems/[system-ip-address]** by replacing **[system-ip-address]** URL with the IP address that you obtained earlier:
-```bash
-SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
-curl -s http://localhost:9081/inventory/systems/{$SYSTEM_IP} | jq
-```
-
-You see a result in JSON format with the system properties of your local JVM. When you visit this URL, these system properties are automatically stored in the inventory. Run the following curl command and you see a new entry for **[system-ip-address]**:
-```bash
-curl -s http://localhost:9081/inventory/systems | jq
-```
-endif::[]
 
 == Externalizing server configuration
 
@@ -339,28 +258,7 @@ The `-e` flag can be used to create and set the values of environment variables 
 Now, when the service is starting up, Open Liberty finds the `default.http.port` environment variable and uses it to set the value of the [hotspot=httpPort file=0]`default.http.port` variable to be used in the HTTP endpoint.
 
 // static guide instructions:
-ifndef::cloud-hosted[]
 The `inventory` service is now available on the new port number that you specified. You can see the contents of the inventory at the http://localhost:9091/inventory/systems[http://localhost:9091/inventory/systems^] URL. You can add your local system properties at `\http://localhost:9091/inventory/systems/pass:c[[system-ip-address]]` by replacing `[system-ip-address]` with the IP address that you obtained in the previous section. The `system` service remains unchanged and is available at the http://localhost:9080/system/properties[http://localhost:9080/system/properties^] URL.
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-The **inventory** service is now available on the new port number that you specified. You can see the contents of the inventory at the **http://localhost:9091/inventory/systems** URL. Run the following curl command:
-```bash
-curl -s http://localhost:9091/inventory/systems | jq
-```
-
-You can add your local system properties at the **http://localhost:9091/inventory/systems/[system-ip-address]** URL by replacing **[system-ip-address]** with the IP address that you obtained in the previous section. Run the following commands:
-```bash
-SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
-curl -s http://localhost:9091/inventory/systems/{$SYSTEM_IP} | jq
-```
-
-The **system** service remains unchanged and is available at the **http://localhost:9080/system/properties** URL. Run the following curl command:
-```bash
-curl -s http://localhost:9080/system/properties | jq
-```
-endif::[]
 
 You can externalize the configuration of more than just the port numbers. To learn more about Open Liberty server configuration, check out the https://openliberty.io/docs/latest/reference/config/server-configuration-overview.html[Server Configuration Overview^] docs. 
 
@@ -402,7 +300,6 @@ include::finish/inventory/src/test/java/it/io/openliberty/guides/inventory/Inven
 
 === Running the tests
 // static guide instructions
-ifndef::cloud-hosted[]
 Run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
 [role='command']
@@ -410,18 +307,6 @@ Run the Maven `package` goal to compile the test classes. Run the Maven `failsaf
 mvn package
 mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9081 -Dsystem.http.port=9080
 ```
-endif::[]
-
-// cloud-hosted guide instructions
-ifdef::cloud-hosted[]
-Run the Maven **package** goal to compile the test classes. Run the Maven **failsafe** goal to test the services that are running in the Docker containers by setting **-Dsystem.ip** to the IP address that you determined previously.
-
-```bash
-SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
-mvn package
-mvn failsafe:integration-test -Dsystem.ip="$SYSTEM_IP" -Dinventory.http.port=9091 -Dsystem.http.port=9080
-```
-endif::[]
 
 If the tests pass, you see output similar to the following example:
 
