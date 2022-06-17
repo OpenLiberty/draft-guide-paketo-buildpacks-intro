@@ -158,21 +158,33 @@ mvn package
 
 To learn more about RESTful web services and how to build them, see https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service^] for details about how to build the `system` service. The `inventory` service is built in a similar way.
 
-== Building the Container images with Paketo buildpacks
+== Building the images with Paketo buildpacks
 
-When building Docker images with the `docker build` command, you need a Dockerfile to instruct Docker on what you need inside of your final image. 
+Before attempting to build your images, ensure that you have installed the https://buildpacks.io/docs/tools/pack/[Pack CLI] as it is needed to run the build processes with Paketo.
 
-While Paketo uses buildpacks to create your images. Buildpacks are a set of executables that are able to inspect your source code, create a buil plan for it and exeute that build plan. Paketo features include building your source without a Dockerfile, advanced cacheing for fastter build times, minimal application images that only include what is used and a software bill-of-materials (SBOM) so you can inspect the image Paketo built for you.
+Paketo buildpacks are an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, such as the Open Liberty runtime.
 
-Paketo Liberty buildpack provides the Open Liberty runtime to the builder orchestration to produce a Open Container Inivitiate (OCI) image that can run just about anywhere.
+A buildpack is a set of executables that is able to inspect and transform your application source code into container images that conform to Open Container Initiative (OCI) image standards.
 
-To begin, we must have Pack CLI installed and set your default builder to a `paketo-buildpacks` builder with the following command:
+Paketo offers many benefits compared to more traditonal ways of generating images from methods such as using `docker build`, which include:
+* Generate Container images without a Dockerfile.
+* Advanced Caching for faster rebuild times of your application.
+* Software Bill-of-Materials (SBOM) which provides information on the contents of your final image.
+* Optimized image size to provide the minimal size for final application image.
+* Reproduces the same application image digest by re-running the build.
+* Auto-Detection of application dependents directly from application source.
+* Image reabasing by repatching the OS layer of your image.
+
+Before building your images, set your default builder to the `paketo-buildpacks` builder with the following command:
 [role='command']
 ```
 pack config default-builder gcr.io/paketo-buildpacks/builder:base
 ```
 
-A Builder is comprised of several part which include the buildpacks, lifecycle and the stack. The buildpacks, as mentioned above, are the set of executables that will inspect your source code while the lifecycle is an orchestration that organizes the buildpacks and assembles the artifacts from the buildpacks in the final OCI image. Finally, the stack is comprised of two images being: the build image and the run image. The build image is the image used to create a devlopment environment for the lifecycle orchestration and the run image is the parent image that is going to be used for the final OCI image.
+A builder is an image comprised of three parts:
+* Set of buildpacks that apply your applications dependencies.
+* A stack, which provides the OS layer for your appliation image.
+* CNB lifecycle which analyzes, detects and assembles your final application image.
 
 Next, construct your images with the following `pack build` command and the applicable flags to customize the build for the Open Liberty runtime:
 [role='command']
@@ -217,7 +229,7 @@ docker run --rm -d --name inventory -p 9081:9081 inventory:1.0-SNAPSHOT
 
 The following table describes the flags in these commands:
 
-[cols="20, 100", options="header"]
+[cols="15, 100", options="header"]
 |===
 | *Flag* | *Description*
 | --rm   | Removes the container when the container is stopped.
