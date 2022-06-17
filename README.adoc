@@ -158,20 +158,22 @@ mvn package
 
 To learn more about RESTful web services and how to build them, see https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service^] for details about how to build the `system` service. The `inventory` service is built in a similar way.
 
-== Building the Container images with Paketo buildpacks
+== Building images with Paketo buildpacks
 
 Before attempting to build your images, ensure that you have installed the https://buildpacks.io/docs/tools/pack/[Pack CLI] as it is needed to run the build processes for Paketo.
 
-`Paketo` buildpacks are an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, such as the `Liberty` runtime. A `buildpack` is a set of executables that is able to inspect and transform your application source code into container images that conform to Open Container Initiative (OCI) image standards.
+`Paketo` buildpacks are an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, such as the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
 
 `Paketo` offers many benefits compared to more traditonal ways of generating images from methods such as using `docker build`, which include:
+
+The benefits of using `Paketo` over other build methods such as `docker build`, include:
 
 * Generating container images without a Dockerfile.
 * Advanced image cacheing for faster rebuild times of your application.
 * Generate a software bill-of-materials (SBOM) which provides information on the contents of your final image.
 * Optimizes image size for minimal final application image.
-* Auto-detects your app's dependencies directly from the source code.
-* Patch OS-Level vulnerabilites in your images automatically.
+* Auto-detectsion of your app's dependencies directly from it's source code.
+* Patches OS-Level vulnerabilites in your images automatically.
 
 Before building your images, set your default builder to the `paketo-buildpacks` builder with the following command:
 [role='command']
@@ -179,13 +181,15 @@ Before building your images, set your default builder to the `paketo-buildpacks`
 pack config default-builder gcr.io/paketo-buildpacks/builder:base
 ```
 
+The `paketo-buildpacks` is the `builder:base` version which is the most basic version of builder to interact with your source code. There is an option, `builder:full` which contains more builders if the `builder:base` is insufficient.
+
 A `builder` is an image comprised of three parts:
 
 * A set of buildpacks that apply your applications dependencies.
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-Next, construct your images with the following `pack build` command and the applicable flags and variables  to customize your Open Liberty image:
+Next, construct your images with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 [role='command']
 ```
 pack build --path ./system \
@@ -203,7 +207,7 @@ pack build --path ./inventory \
 --buildpack paketo-buildpacks/java inventory:1.0-SNAPSHOT
 ```
 
-The following table describes the flags and environment variables supplied to customize your `Paketo` buildpacks:
+The following table describes the flags and environment variables supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
 |===
 | *Flag*                  | *Description*
@@ -215,7 +219,7 @@ The following table describes the flags and environment variables supplied to cu
 | BP_LIBERTY_PROFILE      | The Liberty profile to use. Defaults to `full`.
 |===
 
-Explore all of the flags, variables and options available for the Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
+Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
 As well, learn more about Docker on the https://www.docker.com/what-docker[official Docker page^].
 
 == Running your microservices in Docker containers
