@@ -167,6 +167,7 @@ Paketo buildpacks are an open source project which provides users with productio
 A buildpack is a set of executables that is able to inspect and transform your application source code into container images that conform to Open Container Initiative (OCI) image standards.
 
 Paketo offers many benefits compared to more traditonal ways of generating images from methods such as using `docker build`, which include:
+
 * Generate Container images without a Dockerfile.
 * Advanced Caching for faster rebuild times of your application.
 * Software Bill-of-Materials (SBOM) which provides information on the contents of your final image.
@@ -182,6 +183,7 @@ pack config default-builder gcr.io/paketo-buildpacks/builder:base
 ```
 
 A builder is an image comprised of three parts:
+
 * Set of buildpacks that apply your applications dependencies.
 * A stack, which provides the OS layer for your appliation image.
 * CNB lifecycle which analyzes, detects and assembles your final application image.
