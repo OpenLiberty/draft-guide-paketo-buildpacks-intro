@@ -103,9 +103,11 @@ To learn more about RESTful web services and how to build them, see https://open
 
 == Building images with Paketo buildpacks
 
-Before attempting to build your images, ensure that you have installed the https://buildpacks.io/docs/tools/pack/[Pack CLI] as it is needed to run the build processes for `Paketo`.
+Before attempting to build your images, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The Pack CLI is a command line tool that facilitates the use of buildpacks and provides functionality to build applications with buildpacks and rebase application images created using buildpacks.
 
 `Paketo` buildpacks are an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, such as the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
+
+When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
 The benefits of using `Paketo` buildpacks compared to other build systems such as `docker build` inlclude the following:
 
@@ -116,7 +118,7 @@ The benefits of using `Paketo` buildpacks compared to other build systems such a
 * Auto-detection and installation of your app's dependencies directly from it's source code.
 * Patching OS-Level vulnerabilites in your images automatically upon rebuilding.
 
-Before building your images, set your default builder to the `paketo-buildpacks` builder with the following command:
+Before building your images, set your `pack` default builder to the `Paketo buildpacks` builder with the following command:
 [role='command']
 ```
 pack config default-builder gcr.io/paketo-buildpacks/builder:base
@@ -127,8 +129,6 @@ A `builder` in a buildpack system, is an image comprised of three parts:
 * A set of buildpacks that apply your applications dependencies.
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
-
-The default builder you for yourself is the `builder:base`. This builder is the most bare-bones of the `Paketo buildpacks` providing only what is necessary to alayze, detect and build your application.
 
 Next, construct your images with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 [role='command']
