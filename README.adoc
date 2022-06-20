@@ -34,15 +34,13 @@ Learn how to build your microservices with Paketo and Open Liberty while using D
 
 You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
 
-You'll learn how to build container images with Paketo buildpacks and run containers using Docker for your microservices. You'll specify the buildpacks and builder to be utilized by using the `pack build` command and run the image as Docker containers by using `docker run` command.
-
-[another paragaph here explaining what paketo is a bit more.]
+You'll learn how to build your microservices into OCI images with `Paketo` buildpacks and run them with Docker. You'll specify the buildpacks and builder to be utilized in the `pack build` command and run your images in Docker containers by using `docker run` command.
 
 The two microservices that you'll be working with are called `system` and `inventory`. The `system` microservice returns the JVM system properties of the running container. The `inventory` microservice adds the properties from the `system` microservice to the inventory. This guide demonstrates how both microservices can built with Paketo, run and communicate with each other in different Docker containers. 
 
 == Additional prerequisites
 
-Before you begin, both Pack CLI and Docker need to be installed. For installation, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and the https://docs.docker.com/get-docker/[official Docker documentation^]. You will build the container images with Pack CLI and run the image in Docker containers.
+Before you begin, both `Pack CLI` and `Docker` need to be installed. For installation, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and the https://docs.docker.com/get-docker/[official Docker documentation^]. You will build your microservices with `Pack CLI` and run the images in `Docker` containers.
 
 Make sure to start your Docker daemon before you proceed.
 
@@ -105,20 +103,18 @@ To learn more about RESTful web services and how to build them, see https://open
 
 == Building images with Paketo buildpacks
 
-Before attempting to build your images, ensure that you have installed the https://buildpacks.io/docs/tools/pack/[Pack CLI] as it is needed to run the build processes for Paketo.
+Before attempting to build your images, ensure that you have installed the https://buildpacks.io/docs/tools/pack/[Pack CLI] as it is needed to run the build processes for `Paketo`.
 
 `Paketo` buildpacks are an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, such as the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
 
-`Paketo` offers many benefits compared to more traditonal ways of generating images from methods such as using `docker build`, which include:
+The benefits of using `Paketo` buildpacks compared to other build systems such as `docker build` inlclude the following:
 
-The benefits of using `Paketo` over other build methods such as `docker build`, include:
-
-* Generating container images without a Dockerfile.
+* Generating your application images without a Dockerfile.
 * Advanced image cacheing for faster rebuild times of your application.
 * Generate a software bill-of-materials (SBOM) which provides information on the contents of your final image.
-* Optimizes image size for minimal final application image.
-* Auto-detectsion of your app's dependencies directly from it's source code.
-* Patches OS-Level vulnerabilites in your images automatically.
+* Optimizing image size for minimal final application image.
+* Auto-detection and installation of your app's dependencies directly from it's source code.
+* Patching OS-Level vulnerabilites in your images automatically upon rebuilding.
 
 Before building your images, set your default builder to the `paketo-buildpacks` builder with the following command:
 [role='command']
@@ -126,13 +122,13 @@ Before building your images, set your default builder to the `paketo-buildpacks`
 pack config default-builder gcr.io/paketo-buildpacks/builder:base
 ```
 
-The `paketo-buildpacks` is the `builder:base` version which is the most basic version of builder to interact with your source code. There is an option, `builder:full` which contains more builders if the `builder:base` is insufficient.
-
-A `builder` is an image comprised of three parts:
+A `builder` in a buildpack system, is an image comprised of three parts:
 
 * A set of buildpacks that apply your applications dependencies.
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
+
+The default builder you for yourself is the `builder:base`. This builder is the most bare-bones of the `Paketo buildpacks` providing only what is necessary to alayze, detect and build your application.
 
 Next, construct your images with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 [role='command']
