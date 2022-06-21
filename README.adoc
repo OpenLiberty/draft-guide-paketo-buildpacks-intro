@@ -155,10 +155,17 @@ The following table describes the flags and environment variables supplied to cu
 | --path                  | Relative path to your application source code.
 | --buildpack             | Buildpack to be included in the OCI build process.
 | --env                   | Enviornment variables for the `pack build` process.
+|===
+
+The following table describes the environment variables supplied for your application container.
+[cols="35, 100", options="header"] 
+|===
+| *Enviornment Variables* | *Description*
 | BP_JAVA_APP_SERVER      | The application server to use, in the case it's `Liberty`.
 | BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` information from Maven into the `pack build` process.
 | BP_LIBERTY_PROFILE      | The Liberty profile to use. Defaults to `full`.
 |===
+
 
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
 As well, learn more about Docker on the https://www.docker.com/what-docker[official Docker page^].
