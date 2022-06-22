@@ -130,9 +130,12 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
+
+include::{common-includes}/os-tabs.adoc[]
 
 [.tab_content.windows_section]
+To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
+
 --
 Windows Section
 --
