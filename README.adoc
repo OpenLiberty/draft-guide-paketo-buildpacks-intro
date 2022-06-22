@@ -133,11 +133,27 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 
 include::{common-includes}/os-tabs.adoc[]
 
+To construct your `system` and `inventory` services image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 [.tab_content.windows_section]
-To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
-
 --
-Windows Section
+[role='command']
+```
+pack build --path ./system ^
+--env BP_JAVA_APP_SERVER=liberty ^
+--env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" ^
+--env BP_LIBERTY_PROFILE=jakartaee9 ^
+--buildpack paketo-buildpacks/eclipse-openj9 ^
+--buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+```
+[role='command']
+```
+pack build --path ./inventory ^
+--env BP_JAVA_APP_SERVER=liberty ^
+--env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" ^
+--env BP_LIBERTY_PROFILE=jakartaee9 ^
+--buildpack paketo-buildpacks/eclipse-openj9 ^
+--buildpack paketo-buildpacks/java inventory:1.0-SNAPSHOT
+```
 --
 
 [.tab_content.mac_section.linux_section]
@@ -152,8 +168,6 @@ pack build --path ./system \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
 
-
-Now, repeat the same `pack buid` command for the `inventory` service image with the following command:
 [role='command']
 ```
 pack build --path ./inventory \
