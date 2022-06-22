@@ -130,12 +130,12 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-
+To construct your `system` and `inventory` services image, begin with the following `pack build` commands and the applicable flags and variables to customize your Open Liberty image:
 include::{common-includes}/os-tabs.adoc[]
 
-To construct your `system` and `inventory` services image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 [.tab_content.windows_section]
 --
+Begin with running the following command to build the `system` service:
 [role='command']
 ```
 pack build --path ./system ^
@@ -145,6 +145,7 @@ pack build --path ./system ^
 --buildpack paketo-buildpacks/eclipse-openj9 ^
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
+Then, run the following command to build the `inventory` service:
 [role='command']
 ```
 pack build --path ./inventory ^
@@ -158,6 +159,7 @@ pack build --path ./inventory ^
 
 [.tab_content.mac_section.linux_section]
 --
+Begin with running the following command to build the `system` service:
 [role='command']
 ```
 pack build --path ./system \
@@ -167,7 +169,7 @@ pack build --path ./system \
 --buildpack paketo-buildpacks/eclipse-openj9 \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
-
+Then, run the following command to build the `inventory` service:
 [role='command']
 ```
 pack build --path ./inventory \
