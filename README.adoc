@@ -34,7 +34,7 @@ Learn how to build your microservices with Paketo and Open Liberty while using D
 
 You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
 
-You'll learn how to build your microservices into OCI images with `Paketo` buildpacks and run them with Docker. You'll specify the buildpacks and builder to be utilized in the `pack build` command and run your images in Docker containers by using `docker run` command.
+You'll learn how to build your microservices into OCI images with `Paketo` buildpacks and run them with Docker. You'll specify the buildpacks and builder to be utilized in the `pack build` command and run your images in Docker containers by using the `docker run` command.
 
 The two microservices that you'll be working with are called `system` and `inventory`. The `system` microservice returns the JVM system properties of the running container. The `inventory` microservice adds the properties from the `system` microservice to the inventory. This guide demonstrates how both microservices can built with Paketo, run and communicate with each other in different Docker containers. 
 
@@ -103,9 +103,9 @@ To learn more about RESTful web services and how to build them, see https://open
 
 == Building images with Paketo buildpacks
 
-Before attempting to build your images, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` is a command line tool that facilitates the use of buildpacks and provides functionality to build applications with buildpacks and rebase application images created using buildpacks.
+Before attempting to build your images, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase back images with buildpacks.
 
-`Paketo buildpacks` are an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, such as the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
+`Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, including the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
@@ -130,8 +130,15 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-Now, construct your images with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
+To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 
+[.tab_content.windows_section]
+--
+Windows Section
+--
+
+[.tab_content.mac_section.linux_section]
+--
 [role='command']
 ```
 pack build --path ./system \
@@ -140,7 +147,12 @@ pack build --path ./system \
 --env BP_LIBERTY_PROFILE=jakartaee9 \
 --buildpack paketo-buildpacks/eclipse-openj9 \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+```
 
+
+Now, repeat the same `pack buid` command for the `inventory` service image with the following command:
+[role='command']
+```
 pack build --path ./inventory \
 --env BP_JAVA_APP_SERVER=liberty \
 --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
@@ -148,6 +160,7 @@ pack build --path ./inventory \
 --buildpack paketo-buildpacks/eclipse-openj9 \
 --buildpack paketo-buildpacks/java inventory:1.0-SNAPSHOT
 ```
+--
 
 The following table describes the flags and environment variables supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
