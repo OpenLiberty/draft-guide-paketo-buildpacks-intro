@@ -42,16 +42,12 @@ The microservice that you'll be working with is called `system`. The `system` mi
 
 Before starting the guide, ensure that you have installed the `Pack CLI` and a container manager such as `Docker` or `Podman`. For installation, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and the https://docs.docker.com/get-docker/[official Docker documentation^].
 
-// Potentially remove this now I'm thinking?
-Make sure to start your Docker daemon before you proceed.
-
 ///////////////////////////
 // Getting started
 ///////////////////////////
 
 [role='command']
 include::{common-includes}/gitclone.adoc[]
-
 
 == Packaging your microservices
 
@@ -60,7 +56,7 @@ Navigate to the `start` directory to begin.
 
 You can find the starting Java project in the `start` directory. This project contains a single microservice called `system`, which can be found in the corresponding directory, `system`.
 
-To try out the microservices by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
+To try out the microservice by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
 [role='command']
 ```
 mvn -pl system liberty:run
@@ -73,7 +69,6 @@ After you see the following message in the command-line session, your service is
 The defaultServer server is ready to run a smarter planet.
 ----
 
-
 To access the `system` service, which shows the system properties of the running JVM, see http://localhost:9080/system/properties[^].
 
 // static guide instructions:
@@ -83,7 +78,7 @@ After you are finished checking out the microservice, stop the Open Liberty serv
 mvn -pl system liberty:stop
 ```
 
-To package your microservice, run the maven package goal to build he application `.war` files from the start directory so that the `.war` file is in the `system/target` directory.
+To package your microservice, run the maven package goal to build the application `.war` files from the start directory so that the `.war` file is in the `system/target` directory.
 
 [role='command']
 ```
@@ -100,7 +95,7 @@ Before attempting to build your image, ensure that you have installed https://bu
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
-The benefits of using `Paketo` buildpacks compared to other build systems such as `docker build` or `Buildah` inlclude the following:
+The benefits of using `Paketo buildpacks` to build your application compared to other build tools such as `docker build` and `podman build`, include:
 
 * Generating your application images without a Dockerfile or Containerfile.
 * Advanced image cacheing for faster rebuild times of your application.
@@ -117,11 +112,11 @@ pack config default-builder gcr.io/paketo-buildpacks/builder:base
 
 A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 
-* A set of buildpacks that apply your applications dependencies.
+* A set of buildpacks that apply your application's dependencies.
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-To construct your `system` service image, begin with the following `pack build` commands and the applicable flags and variables to customize your Open Liberty image:
+To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 include::{common-includes}/os-tabs.adoc[]
 
 [.tab_content.windows_section]
@@ -161,7 +156,7 @@ The following table describes the flags and environment variables supplied to cu
 | --env                   | Enviornment variables for the `pack build` process.
 |===
 
-The following table describes the environment variables supplied for your application container.
+The following table describes the environment variables supplied for your application image. 
 [cols="35, 100", options="header"] 
 |===
 | *Enviornment Variables* | *Description*
@@ -172,10 +167,10 @@ The following table describes the environment variables supplied for your applic
 
 
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
-As well as, learn more about Docker on the https://www.docker.com/what-docker[official Docker page^].
 
 == Running your microservices in Docker containers
-Now that your two images are built, you will run your microservices in Docker containers:
+
+Now that your `system` image is built, you will run your microservice in a container. In this guide, you will use `Docker` as the container manager for deploying your image, but the process should be neary the same for all other container managers.
 
 [role='command']
 ```
@@ -193,7 +188,7 @@ The following table describes the flags in these commands:
 | -p     | Maps the host ports to the container ports. For example: `-p <HOST_PORT>:<CONTAINER_PORT>`
 |===
 
-Next, run the `docker ps` command to verify that your containers are started:
+Next, run the `docker ps` command to verify that your container are started:
 
 [role='command']
 ```
@@ -211,8 +206,7 @@ CONTAINER ID    IMAGE                   COMMAND                  CREATED        
 If a problem occurs and your containers exit prematurely, the containers don't appear in the container list that the `docker ps` command displays. Instead, your container appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` command to view the container logs for any potential problems. Run the `docker stats system` commands to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `docker rm system` command. Rebuild your image, and start the container again.
 
 // static guide instructions:
-
-To access the application, go to `http://localhost:9080/system/properties` and there will be JSON container information about the container that is currently running the `system` service.
+To acces the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
 
 == Externalizing server configuration
 
@@ -267,24 +261,6 @@ include::finish/system/src/test/java/it/io/openliberty/guides/system/SystemEndpo
 
 The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a `200` response code from the `system` service endpoint.
 
-[role="code_command hotspot file=1", subs="quotes"]
-----
-#Create the `InventoryEndpointIT` class.#
-`inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java`
-----
-
-InventoryEndpointIT.java
-[source, java, linenums, indent=0, role="code_column hide_tags=copyright"]
-----
-include::finish/inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java[]
-----
-
-* The [hotspot=testEmptyInventory file=1]`testEmptyInventory()` method checks that the `inventory` service has a total of 0 systems before anything is added to it.
-* The [hotspot=testHostRegistration file=1]`testHostRegistration()` method checks that the `system` service was added to `inventory` properly.
-* The [hotspot=testSystemPropertiesMatch file=1]`testSystemPropertiesMatch()` checks that the `system` properties match what was added into the `inventory` service.
-* The [hotspot=testUnknownHost file=1]`testUnknownHost()` method checks that an error is raised if an unknown host name is being added into the `inventory` service.
-* The [hotspot=systemServiceIp file=1]`systemServiceIp` variable has the same value as the IP address that you retrieved in the previous section when you manually added the `system` service into the `inventory` service. This value of the IP address is passed in when you run the tests.
-
 === Running the tests
 // static guide instructions
 Run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
@@ -292,7 +268,7 @@ Run the Maven `package` goal to compile the test classes. Run the Maven `failsaf
 [role='command']
 ```
 mvn package
-mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9081 -Dsystem.http.port=9080
+mvn failsafe:integration-test -Dsystem.ip=[system-ip-address]  -Dsystem.http.port=9080
 ```
 
 If the tests pass, you see output similar to the following example:
@@ -309,27 +285,18 @@ Results:
 
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 
--------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running it.io.openliberty.guides.inventory.InventoryEndpointIT
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.935 s - in it.io.openliberty.guides.inventory.InventoryEndpointIT
-
-Results:
-
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 ----
 
-When you are finished with the services, run the following commands to stop and remove your containers:
+When you are finished with the service, run the following command to stop and remove your container:
 
 [role='command']
 ```
-docker stop inventory system 
-docker rm inventory system
+docker stop system
 ```
 
 
 == Great work! You're done!
+
 
 You have just built Docker images and run two microservices on Open Liberty in containers. 
 
