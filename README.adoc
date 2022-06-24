@@ -10,13 +10,13 @@
 :page-layout: guide-multipane
 :page-duration: 20 minutes
 :page-releasedate: 2019-07-23
-:page-description: Learn how to containerize and run your microservices with Open Liberty using Docker
+:page-description: Learn how to build your microservices and run them with Open Liberty using containers.
 :page-tags: ['Docker']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['docker', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/prod
 :source-highlighter: prettify
-:page-seo-title: Building and containerizing microservices wit Paketo Buildpacks 
+:page-seo-title: Building and containerizing microservices with Paketo Buildpacks 
 :page-seo-description: A getting started tutorial with examples of how to build Open Container Initiative (OCI) images with Paketo Buildpacks and deploying them in popular container managers like Docker and Podman.  
 :guide-author: Open Liberty
 = Containerizing microservices with Paketo Buildpacks and Docker
@@ -34,13 +34,13 @@ Learn how to build your microservices with Paketo and Open Liberty while using D
 
 You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
 
-You'll learn how to build your microservices into OCI images with `Paketo` buildpacks and run them with your preferred container manager, such as `Docker` or `Podman`. You'll specify the buildpacks and builder to be utilized in the `pack build` command and run your images in containers.
+You'll learn how to build your microservices into OCI images with `Paketo` buildpacks and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command and run your images in containers.
 
 The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. The guide demonstraes how microservices can be built with `Paketo Buildpacks` and run them with your preferred container manager.
 
 == Additional prerequisites
 
-Before starting the guide, ensure that you have installed the `Pack CLI` and a container manager such as `Docker` or `Podman`. For installation, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and the https://docs.docker.com/get-docker/[official Docker documentation^].
+Before starting the guide, ensure that you have installed the `Pack CLI` and a container manager such as `Podman` or `Docker`. For installationof the `Pack CLI`, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and for installation of a container manager, refer to https://podman.io/getting-started/installation[Offical Podman Documentation^] or the https://docs.docker.com/get-docker/[official Docker documentation^].
 
 ///////////////////////////
 // Getting started
@@ -95,14 +95,14 @@ Before attempting to build your image, ensure that you have installed https://bu
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
-The benefits of using `Paketo buildpacks` to build your application compared to other build tools such as `docker build` and `podman build`, include:
+The benefits of using `Paketo buildpacks` to build your application compared to other build tools such as `podman build` and `docker build`, include:
 
-* Generating your application images without a Dockerfile or Containerfile.
+* Generating your application images without a Containerfile or Dockerfile.
 * Advanced image cacheing for faster rebuild times of your application.
 * Generate a software bill-of-materials (SBOM) which provides information on the contents of your final image.
 * Optimizing image size for minimal final application image.
 * Auto-detection and installation of your app's dependencies directly from it's source code.
-* Patching OS-Level vulnerabilites in your images automatically upon rebuilding.
+* Patching OS-level vulnerabilites in your images automatically upon rebuilding.
 
 To start building your OCI image, set your `pack` default builder to the `Paketo buildpacks` builder with the following command:
 [role='command']
@@ -168,14 +168,32 @@ The following table describes the environment variables supplied for your applic
 
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
 
-== Running your microservices in Docker containers
+== Running your microservices in containers
 
-Now that your `system` image is built, you will run your microservice in a container. In this guide, you will use `Docker` as the container manager for deploying your image, but the process should be neary the same for all other container managers.
+Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from the `Pack CLI` are Open Container Initiative (OCI) images, they are compatible with nearly all of the most popular container managers such as `Podman` and `Docker`. 
 
+[.tab_link.docker_link]
+`*DOCKER*`
+[.tab_link.podman_link]
+`*PODMAN*`
+
+[.tab_content.podman_link]
+--
+podman run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
+--
+
+[.tab_content.docker_link]
+--
 [role='command']
 ```
-docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
+docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
 ```
+--
+
+//[role='command']
+//```
+//docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
+//```
 
 The following table describes the flags in these commands:
 
