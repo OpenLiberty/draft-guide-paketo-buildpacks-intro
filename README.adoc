@@ -135,7 +135,7 @@ pack build --path ./system ^
 
 [.tab_content.mac_section.linux_section]
 --
-Begin with running the following command to build the `system` service:
+Run the following command to build the `system` service:
 [role='command']
 ```
 pack build --path ./system \
@@ -177,13 +177,17 @@ Now that your `system` image is built, you will now run your microservice in a c
 [.tab_link.podman_link]
 `*PODMAN*`
 
-[.tab_content.podman_link]
+[.tab_content.podman_section]
 --
+[role='command']
+```
 podman run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
+```
 --
 
-[.tab_content.docker_link]
+[.tab_content.docker_section]
 --
+This is where the docker link should be
 [role='command']
 ```
 docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
