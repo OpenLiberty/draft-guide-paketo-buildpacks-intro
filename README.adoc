@@ -121,8 +121,7 @@ include::{common-includes}/os-tabs.adoc[]
 
 [.tab_content.windows_section]
 --
-
-Currently, there is only support for using `Pack CLI` images with Docker, so if your primary container manager is `Podman`, your results may vary. 
+Currently, `Pack CLI` does not officially support the building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
 
 [role='command']
 ```
@@ -160,8 +159,7 @@ pack build --path ./system \
 --docker-host=inherit \
 --trust-builder=true system:1.0-SNAPSHOT
 ```
-If you'd like to try building your images for `Podman` but ahve the `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
-
+If you'd like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation to configure it for `Podman`.
 --
 
 The following table describes the flags supplied to customize your Open Liberty image:
@@ -171,7 +169,11 @@ The following table describes the flags supplied to customize your Open Liberty 
 | --path                  | Relative path to your application source code.
 | --buildpack             | Buildpack to be included in the OCI build process.
 | --env                   | Enviornment variables for the `pack build` process.
+| --docker-host           | Address to docker daemon that will be exposed to build container. The `inherit` value may be used when the address is set to DOCKER_HOST terminal environment variable.
+| --trust-builder         | Trust the provided builder, all lifecycle phases will be run in single container.
 |===
+
+For more information and to dive deeper on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build Documentation^]. 
 
 The following table describes the environment variables supplied for your application image. 
 [cols="35, 100", options="header"] 
@@ -222,6 +224,11 @@ The following table describes the flags in these commands:
 |===
 
 Next, run the following command to verify that your container has been started:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
 
 [.tab_content.podman_section]
 [role='command']
