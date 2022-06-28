@@ -9,8 +9,8 @@
 :projectid: paketo-buildpacks-intro
 :page-layout: guide-multipane
 :page-duration: 20 minutes
-:page-releasedate: 2019-07-23
-:page-description: Learn how to build your microservices and run them with Open Liberty using containers.
+:page-releasedate: 2022-07-01
+:page-description: Learn how to build your microservices with Paketo and Open Liberty and run them in a container manager.
 :page-tags: ['Docker']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['docker', 'kubernetes-intro']
@@ -24,7 +24,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the  https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to build your microservices with Paketo and Open Liberty while using Docker to containerize them.
+Learn how to build your microservices with Paketo and Open Liberty and run them in a container manager.
 
 // =================================================================================================
 //  What you'll learn
@@ -34,13 +34,13 @@ Learn how to build your microservices with Paketo and Open Liberty while using D
 
 You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
 
-You'll learn how to build your microservices into OCI images with `Paketo` buildpacks and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command and run your images in containers.
+You'll learn how to build your microservices into OCI images with `Paketo buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image.
 
-The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. The guide demonstraes how microservices can be built with `Paketo Buildpacks` and run them with your preferred container manager.
+The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. The guide demonstraes how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
 == Additional prerequisites
 
-Before starting the guide, ensure that you have installed the `Pack CLI` and a container manager such as `Podman` or `Docker`. For installationof the `Pack CLI`, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and for installation of a container manager, refer to https://podman.io/getting-started/installation[Offical Podman Documentation^] or the https://docs.docker.com/get-docker/[official Docker documentation^].
+Before starting the guide, ensure that you have installed the `Pack CLI` and a container manager such as `Podman` or `Docker`. For installation of the `Pack CLI`, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and for installation of a container manager, refer to https://podman.io/getting-started/installation[Offical Podman Documentation^] or the https://docs.docker.com/get-docker/[official Docker documentation^].
 
 ///////////////////////////
 // Getting started
@@ -54,7 +54,7 @@ include::{common-includes}/gitclone.adoc[]
 // static guide instructions:
 Navigate to the `start` directory to begin.
 
-You can find the starting Java project in the `start` directory. This project contains a single microservice called `system`, which can be found in the corresponding directory, `system`.
+You can find the starting Java project in the `start` directory. This project contains a microservice called `system`, which can be found in the corresponding directory, `system`.
 
 To try out the microservice by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
 [role='command']
@@ -72,7 +72,7 @@ The defaultServer server is ready to run a smarter planet.
 To access the `system` service, which shows the system properties of the running JVM, see http://localhost:9080/system/properties[^].
 
 // static guide instructions:
-After you are finished checking out the microservice, stop the Open Liberty server by pressing `CTRL+C` in the command-line session where you ran the server. Alternatively, you can run the `liberty:stop` goal in another command-line session:
+After you are finished checking out the `system` service, stop the Open Liberty server by pressing `CTRL+C` in the command-line session where you ran the server. Alternatively, you can run hte `liberty:stop` goal in another command-line session:
 [role='command']
 ```
 mvn -pl system liberty:stop
@@ -89,13 +89,13 @@ To learn more about RESTful web services and how to build them, see https://open
 
 == Building images with Paketo buildpacks
 
-Before attempting to build your image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase back images with buildpacks.
+Before attempting to build your image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase images with buildpacks.
 
 `Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, including the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
-The benefits of using `Paketo buildpacks` to build your application compared to other build tools such as `podman build` and `docker build`, include:
+The benefits of using `Paketo buildpacks` with the `Pack CLI` to build your application compared to toher traditional build tools, include:
 
 * Generating your application images without a Containerfile or Dockerfile.
 * Advanced image cacheing for faster rebuild times of your application.
@@ -116,12 +116,13 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
+Now, to begin constructing your `system` service image, run the following `pack build` command with the applicabke flags envir varibales to customize your Open Liberty image:
 include::{common-includes}/os-tabs.adoc[]
 
 [.tab_content.windows_section]
 --
-Begin with running the following command to build the `system` service:
+
+Currently, there is only support for using `Pack CLI` images with Docker, so if your primary container manager is `Podman`, your results may vary. 
 
 [role='command']
 ```
@@ -136,7 +137,7 @@ pack build --path ./system ^
 
 [.tab_content.mac_section.linux_section]
 --
-Run the following command if the container mangager you are using is `Docker` to build the `system` service:
+If your `Docker` is your preferred container manager, then run the following command: 
 [role='command']
 ```
 pack build --path ./system \
@@ -147,7 +148,7 @@ pack build --path ./system \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
 
-Otherwise, if `Podman` is your current container manger, run the following command
+Otherwise, if `Podman` is your current container manger, run the following command, instead:
 [role='command']
 ```
 pack build --path ./system \
@@ -159,10 +160,11 @@ pack build --path ./system \
 --docker-host=inherit \
 --trust-builder=true system:1.0-SNAPSHOT
 ```
+If you'd like to try building your images for `Podman` but ahve the `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
+
 --
 
-
-The following table describes the flags and environment variables supplied to customize your Open Liberty image:
+The following table describes the flags supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
 |===
 | *Flag*                  | *Description*
@@ -185,7 +187,7 @@ Explore all of the flags, variables and options available for the Paketo Liberty
 
 == Running your microservices in containers
 
-Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from the `Pack CLI` are Open Container Initiative (OCI) images, they are compatible with nearly all of the most popular container managers such as `Podman` and `Docker`. 
+Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Container Initiative (OCI) images, they are compatible with which container manager you have configured with `Pack CLI`.
 
 [.tab_link.podman_link]
 `*PODMAN*`
@@ -219,8 +221,15 @@ The following table describes the flags in these commands:
 | -p     | Maps the host ports to the container ports. For example: `-p <HOST_PORT>:<CONTAINER_PORT>`
 |===
 
-Next, run the `docker ps` command to verify that your container are started:
+Next, run the following command to verify that your container has been started:
 
+[.tab_content.podman_section]
+[role='command']
+```
+podman ps
+```
+
+[.tab_content.docker_section]
 [role='command']
 ```
 docker ps
@@ -320,14 +329,19 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 
 When you are finished with the service, run the following command to stop and remove your container:
 
+[.tab_content.podman_section]
+[role='command']
+```
+podman stop system 
+```
+
+[.tab_content.docker_section]
 [role='command']
 ```
 docker stop system
 ```
 
-
 == Great work! You're done!
-
 
 You have just built Docker images and run two microservices on Open Liberty in containers. 
 
