@@ -58,9 +58,9 @@ You can find the starting Java project in the `start` directory. This project co
 
 To try out the microservice by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
 [role='command']
-```
+----
 mvn -pl system liberty:run
-```
+----
 
 After you see the following message in the command-line session, your service is ready:
 
@@ -74,16 +74,16 @@ To access the `system` service, which shows the system properties of the running
 // static guide instructions:
 After you are finished checking out the `system` service, stop the Open Liberty server by pressing `CTRL+C` in the command-line session where you ran the server. Alternatively, you can run hte `liberty:stop` goal in another command-line session:
 [role='command']
-```
+----
 mvn -pl system liberty:stop
-```
+----
 
 To package your microservice, run the maven package goal to build the application `.war` files from the start directory so that the `.war` file is in the `system/target` directory.
 
 [role='command']
-```
+----
 mvn package
-```
+----
 
 To learn more about RESTful web services and how to build them, see https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service^] for details about how to build the `system` service. 
 
@@ -95,7 +95,7 @@ Before attempting to build your image, ensure that you have installed https://bu
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
-The benefits of using `Paketo buildpacks` with the `Pack CLI` to build your application compared to toher traditional build tools, include:
+The benefits of using `Paketo buildpacks` with the `Pack CLI` to build your application compared to other traditional build tools, include:
 
 * Generating your application images without a Containerfile or Dockerfile.
 * Advanced image cacheing for faster rebuild times of your application.
@@ -116,40 +116,40 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-Now, to begin constructing your `system` service image, run the following `pack build` command with the applicabke flags envir varibales to customize your Open Liberty image:
+Now, to begin constructing your `system` service image, run the following `pack build` command with the applicable flags and environment variables to customize your Open Liberty image:
 include::{common-includes}/os-tabs.adoc[]
 
 [.tab_content.windows_section]
 --
-Currently, `Pack CLI` does not officially support the building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
+Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
 
 [role='command']
-```
+----
 pack build --path ./system ^
 --env BP_JAVA_APP_SERVER=liberty ^
 --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" ^
 --env BP_LIBERTY_PROFILE=jakartaee9 ^
 --buildpack paketo-buildpacks/eclipse-openj9 ^
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
-```
+----
 --
 
 [.tab_content.mac_section.linux_section]
 --
 If your `Docker` is your preferred container manager, then run the following command: 
 [role='command']
-```
+----
 pack build --path ./system \
 --env BP_JAVA_APP_SERVER=liberty \
 --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
 --env BP_LIBERTY_PROFILE=jakartaee9 \
 --buildpack paketo-buildpacks/eclipse-openj9 \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
-```
+----
 
 Otherwise, if `Podman` is your current container manger, run the following command, instead:
 [role='command']
-```
+----
 pack build --path ./system \
 --env BP_JAVA_APP_SERVER=liberty \
 --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
@@ -158,7 +158,7 @@ pack build --path ./system \
 --buildpack paketo-buildpacks/java \
 --docker-host=inherit \
 --trust-builder=true system:1.0-SNAPSHOT
-```
+----
 If you'd like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation to configure it for `Podman`.
 --
 
@@ -169,8 +169,8 @@ The following table describes the flags supplied to customize your Open Liberty 
 | --path                  | Relative path to your application source code.
 | --buildpack             | Buildpack to be included in the OCI build process.
 | --env                   | Enviornment variables for the `pack build` process.
-| --docker-host           | Address to docker daemon that will be exposed to build container. The `inherit` value may be used when the address is set to DOCKER_HOST terminal environment variable.
-| --trust-builder         | Trust the provided builder, all lifecycle phases will be run in single container.
+| --docker-host           | Address to docker daemon that will be exposed to build container. Use `inherit` value when the docker daemon address is set to the DOCKER_HOST environment variable.
+| --trust-builder         | Trust the provided builder.
 |===
 
 For more information and to dive deeper on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build Documentation^]. 
@@ -199,17 +199,17 @@ Now that your `system` image is built, you will now run your microservice in a c
 [.tab_content.podman_section]
 --
 [role='command']
-```
+----
 podman run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
-```
+----
 --
 
 [.tab_content.docker_section]
 --
 [role='command']
-```
+----
 docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
-```
+----
 --
 
 The following table describes the flags in these commands:
@@ -231,16 +231,20 @@ Next, run the following command to verify that your container has been started:
 `*DOCKER*`
 
 [.tab_content.podman_section]
+--
 [role='command']
-```
+----
 podman ps
-```
+----
+--
 
 [.tab_content.docker_section]
+--
 [role='command']
-```
+----
 docker ps
-```
+----
+--
 
 Make sure that your containers are running and show `Up` as their status:
 
