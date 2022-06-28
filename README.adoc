@@ -123,14 +123,6 @@ include::{common-includes}/os-tabs.adoc[]
 --
 Begin with running the following command to build the `system` service:
 
-[.tab_link.podman_link]
-`*PODMAN*`
-[.tab_link.docker_link]
-`*DOCKER*`
-
-[.tab_content.docker_link]
---
-
 [role='command']
 ```
 pack build --path ./system ^
@@ -141,13 +133,10 @@ pack build --path ./system ^
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
 --
---
 
 [.tab_content.mac_section.linux_section]
 --
-Run the following command to build the `system` service:
-[.tab_content.docker_link]
---
+Run the following command if the container mangager you are using is `Docker` to build the `system` service:
 [role='command']
 ```
 pack build --path ./system \
@@ -157,9 +146,8 @@ pack build --path ./system \
 --buildpack paketo-buildpacks/eclipse-openj9 \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
---
-[.tab_content.podman_link]
---
+
+Otherwise, if `Podman` is your current container manger, run the following command
 [role='command']
 ```
 pack build --path ./system \
@@ -171,7 +159,6 @@ pack build --path ./system \
 --docker-host=inherit \
 --trust-builder=true system:1.0-SNAPSHOT
 ```
---
 --
 
 
