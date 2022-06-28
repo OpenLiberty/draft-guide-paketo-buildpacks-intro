@@ -132,7 +132,6 @@ Begin with running the following command to build the `system` service:
 --
 
 [role='command']
---
 ```
 pack build --path ./system ^
 --env BP_JAVA_APP_SERVER=liberty ^
@@ -143,13 +142,13 @@ pack build --path ./system ^
 ```
 --
 --
+
 [.tab_content.mac_section.linux_section]
 --
 Run the following command to build the `system` service:
-[.tab_content.podman_link]
+[.tab_content.docker_link]
 --
 [role='command']
---
 ```
 pack build --path ./system \
 --env BP_JAVA_APP_SERVER=liberty \
@@ -158,6 +157,10 @@ pack build --path ./system \
 --buildpack paketo-buildpacks/eclipse-openj9 \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
+--
+[.tab_content.podman_link]
+--
+[role='command']
 ```
 pack build --path ./system \
 --env BP_JAVA_APP_SERVER=liberty \
@@ -170,6 +173,7 @@ pack build --path ./system \
 ```
 --
 --
+
 
 The following table describes the flags and environment variables supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
