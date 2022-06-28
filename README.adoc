@@ -129,6 +129,11 @@ include::{common-includes}/os-tabs.adoc[]
 Begin with running the following command to build the `system` service:
 [role='command']
 
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
 [.tab_content.docker_section]
 --
 ```
