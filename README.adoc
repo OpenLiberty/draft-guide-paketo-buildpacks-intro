@@ -119,18 +119,18 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 include::{common-includes}/os-tabs.adoc[]
 
-[.subsection_link.podman_link]
-`*PODMAN*`
-[.subsection_link.docker_link]
-`*DOCKER*`
-
 [.tab_content.windows_section]
 --
 Begin with running the following command to build the `system` service:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.docker_link]
+--
 [role='command']
-
-
-[.subsection_content.docker_link]
 --
 ```
 pack build --path ./system ^
