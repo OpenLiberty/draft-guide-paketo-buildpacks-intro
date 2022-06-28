@@ -119,10 +119,18 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 To construct your `system` service image, begin with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
 include::{common-includes}/os-tabs.adoc[]
 
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
 [.tab_content.windows_section]
 --
 Begin with running the following command to build the `system` service:
 [role='command']
+
+[.tab_content.docker_section]
+--
 ```
 pack build --path ./system ^
 --env BP_JAVA_APP_SERVER=liberty ^
@@ -131,6 +139,7 @@ pack build --path ./system ^
 --buildpack paketo-buildpacks/eclipse-openj9 ^
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ```
+--
 --
 
 [.tab_content.mac_section.linux_section]
@@ -172,10 +181,10 @@ Explore all of the flags, variables and options available for the Paketo Liberty
 
 Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from the `Pack CLI` are Open Container Initiative (OCI) images, they are compatible with nearly all of the most popular container managers such as `Podman` and `Docker`. 
 
-[.tab_link.docker_link]
-`*DOCKER*`
 [.tab_link.podman_link]
 `*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
 
 [.tab_content.podman_section]
 --
@@ -187,17 +196,11 @@ podman run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
 
 [.tab_content.docker_section]
 --
-This is where the docker link should be
 [role='command']
 ```
 docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
 ```
 --
-
-//[role='command']
-//```
-//docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
-//```
 
 The following table describes the flags in these commands:
 
