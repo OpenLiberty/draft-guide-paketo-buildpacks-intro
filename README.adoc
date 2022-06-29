@@ -144,10 +144,13 @@ pack build --path ./system ^
 
 [.tab_content.mac_section.linux_section.podman_section.docker_section]
 --
+
 [.tab_link.podman_link]
 `*PODMAN*`
 [.tab_link.docker_link]
 `*DOCKER*`
+[.tab_content.docker_section.mac_section.linux_section]
+--
 If your `Docker` is your preferred container manager, then run the following command: 
 [role='command']
 ----
@@ -158,7 +161,10 @@ pack build --path ./system \
 --buildpack paketo-buildpacks/eclipse-openj9 \
 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ----
+--
 
+[.tab_content.podman_section.mac_section.linux_section]
+--
 Otherwise, if `Podman` is your current container manger, run the following command, instead:
 [role='command']
 ----
@@ -172,6 +178,7 @@ pack build --path ./system \
 --trust-builder=true system:1.0-SNAPSHOT
 ----
 If you'd like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation to configure it for `Podman`.
+--
 --
 
 The following table describes the flags supplied to customize your Open Liberty image:
