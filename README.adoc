@@ -127,7 +127,7 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 Now, to begin constructing your `system` service image, run the following `pack build` command with the applicable flags and environment variables to customize your Open Liberty image:
 include::{common-includes}/os-tabs.adoc[]
 
-[.tab_content.windows_section]
+[.tab_content.windows_section.docker_section.podman_section]
 --
 Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
 
@@ -142,8 +142,12 @@ pack build --path ./system ^
 ----
 --
 
-[.tab_content.mac_section.linux_section]
+[.tab_content.mac_section.linux_section.podman_section.docker_section]
 --
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
 If your `Docker` is your preferred container manager, then run the following command: 
 [role='command']
 ----
@@ -203,7 +207,7 @@ include::{common-includes}/os-tabs.adoc[]
 
 Start with navigating to the following directory
 
-[.tab_content.windows_section]
+[.tab_content.windows_section.podman_section.docker_section]
 --
 [role='command']
 ----
@@ -230,7 +234,7 @@ pack build --env BP_JAVA_APP_SERVER=liberty --path .\inventory\target\liberty\wl
 ----
 --
 
-[.tab_content.mac_section.linux_section]
+[.tab_content.mac_section.linux_section.podman_section.docker_section]
 --
 [role='command']
 ----
