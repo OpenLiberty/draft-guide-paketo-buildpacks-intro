@@ -200,6 +200,9 @@ Explore all of the flags, variables and options available for the Paketo Liberty
 Next, you ar going to build your `inventory` microservice with a packaged Open Liberty server that you will package from your application source. 
 
 Start with navigating to the following directory
+
+include::{common-includes}/os-tabs.adoc[]
+
 [.tab_content.windows_section]
 --
 [role='command']
@@ -226,6 +229,7 @@ Finally, with your newly packaged server, run the following command to build you
 pack build --env BP_JAVA_APP_SERVER=liberty --path .\inventory\target\liberty\wlp\usr\servers\defaultServer\defaultServer.zip inventory:1.0-SNAPSHOT
 ----
 --
+
 [.tab_content.mac_section.linux_section]
 --
 [role='command']
