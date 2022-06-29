@@ -342,15 +342,19 @@ When you are finished with the service, run the following command to stop and re
 
 [.tab_content.podman_section]
 [role='command']
-```
+--
+----
 podman stop system 
-```
+----
+--
 
 [.tab_content.docker_section]
 [role='command']
-```
+--
+----
 docker stop system
-```
+----
+--
 
 == Great work! You're done!
 
