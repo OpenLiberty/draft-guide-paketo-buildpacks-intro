@@ -267,12 +267,12 @@ Successfully built image inventory:1.0-SNAPSHOT
 
 Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Container Initiative (OCI) images, they are compatible with which container manager you have configured with `Pack CLI`.
 
-[.tab_two_link.podman_link]
+[.tab_link.podman_link]
 `*PODMAN*`
-[.tab_two_link.docker_link]
+[.tab_link.docker_link]
 `*DOCKER*`
 
-[.tab_two_content.podman_section]
+[.tab_content.podman_section.windows_section.mac_section.linux_section]
 --
 [role='command']
 ----
@@ -280,7 +280,7 @@ podman run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
 ----
 --
 
-[.tab_two_content.docker_section]
+[.tab_content.docker_section.windows_section.mac_section.linux_section]
 --
 [role='command']
 ----
