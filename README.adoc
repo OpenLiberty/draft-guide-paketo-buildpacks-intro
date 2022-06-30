@@ -252,27 +252,6 @@ To acces the `system` service, which shows the system properties of the running 
 
 After you have verifyied that your `system` service is up and running in your contiainer, you are able to stop and remove your container with the following command:
 
-[.tab_link.podman_link]
-`*PODMAN*`
-[.tab_link.docker_link]
-`*DOCKER*`
-
-[.tab_content.podman_section]
---
-[role='command']
-----
-podman stop system
-----
---
-
-[.tab_content.docker_section]
---
-[role='command']
-----
-docker stop system
-----
---
-
 == Testing the microservices
 
 You can test your microservices manually by hitting the endpoints or with automated tests that check your running Docker containers.
@@ -314,21 +293,31 @@ include::finish/inventory/src/test/java/it/io/openliberty/guides/inventory/Inven
 ifndef::cloud-hosted[]
 Run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.podman_section]
+--
+[role='command']
+----
+podman inspect system -f "{{ .NetworkSettings.IPAddress }}"
+----
+
+[.tab_content.docker_section]
+--
+[role='command']
+----
+docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
+----
+--
+
 [role='command']
 ```
 mvn package
-mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9081 -Dsystem.http.port=9080
-```
-endif::[]
-
-// cloud-hosted guide instructions
-ifdef::cloud-hosted[]
-Run the Maven **package** goal to compile the test classes. Run the Maven **failsafe** goal to test the services that are running in the Docker containers by setting **-Dsystem.ip** to the IP address that you determined previously.
-
-```bash
-SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
-mvn package
-mvn failsafe:integration-test -Dsystem.ip="$SYSTEM_IP" -Dinventory.http.port=9091 -Dsystem.http.port=9080
+mvn failsafe:integration-test -Dsystem.ip=[system-ip-address]  -Dsystem.http.port=9080
 ```
 endif::[]
 
