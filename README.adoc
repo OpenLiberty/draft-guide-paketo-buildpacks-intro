@@ -6,25 +6,25 @@
 // Contributors:
 //     IBM Corporation
 //
-:projectid: containerize-paketo
+:projectid: paketo-buildpacks-intro
 :page-layout: guide-multipane
-:page-duration: 20 minutes
-:page-releasedate: 2019-07-23
-:page-description: Learn how to containerize and run your microservices with Open Liberty using Docker
+:page-duration: 15 minutes
+:page-releasedate: 2022-07-01
+:page-description: Learn how to build your microservices with Paketo and Open Liberty and run them in a container manager.
 :page-tags: ['Docker']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['docker', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/prod
 :source-highlighter: prettify
-:page-seo-title: Containerizing and running Java microservices in Docker containers
-:page-seo-description: A getting started tutorial with examples of how to containerize or dockerize your Java microservices by building a container image and running the image as a Docker container.
+:page-seo-title: Building and containerizing microservices with Paketo Buildpacks 
+:page-seo-description: A getting started tutorial with examples of how to build Open Container Initiative (OCI) images with Paketo Buildpacks and deploying them in popular container managers like Docker and Podman.  
 :guide-author: Open Liberty
 = Containerizing microservices with Paketo Buildpacks and Docker
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the  https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to build your microservices with Paketo and Open Liberty while using Docker to containerize them.
+Learn how to build your microservices with Paketo and Open Liberty and run them in a container manager.
 
 // =================================================================================================
 //  What you'll learn
@@ -34,17 +34,13 @@ Learn how to build your microservices with Paketo and Open Liberty while using D
 
 You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
 
-You'll learn how to build container images with Paketo buildpacks and run containers using Docker for your microservices. You'll specify the buildpacks and builder to be utilized by using the `pack build` command and run the image as Docker containers by using `docker run` command.
+You'll learn how to build your microservices into OCI images with `Paketo buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image.
 
-[another paragaph here explaining what paketo is a bit more.]
-
-The two microservices that you'll be working with are called `system` and `inventory`. The `system` microservice returns the JVM system properties of the running container. The `inventory` microservice adds the properties from the `system` microservice to the inventory. This guide demonstrates how both microservices can built with Paketo, run and communicate with each other in different Docker containers. 
+The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
 == Additional prerequisites
 
-Before you begin, both Pack CLI and Docker need to be installed. For installation, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and the https://docs.docker.com/get-docker/[official Docker documentation^]. You will build the container images with Pack CLI and run the image in Docker containers.
-
-Make sure to start your Docker daemon before you proceed.
+Before starting the guide, ensure that you have installed the `Pack CLI` and a container manager such as `Podman` or `Docker`. For installation of the `Pack CLI`, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and for installation of a container manager, refer to https://podman.io/getting-started/installation[Offical Podman Documentation^] or the https://docs.docker.com/get-docker/[official Docker documentation^].
 
 ///////////////////////////
 // Getting started
@@ -53,183 +49,159 @@ Make sure to start your Docker daemon before you proceed.
 [role='command']
 include::{common-includes}/gitclone.adoc[]
 
-
 == Packaging your microservices
 
 // static guide instructions:
-ifndef::cloud-hosted[]
 Navigate to the `start` directory to begin.
-endif::[]
 
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-To begin, run the following command to navigate to the **start** directory:
-```bash
-cd start
-```
-endif::[]
+You can find the starting Java project in the `start` directory. This project contains a microservice called `system`, which can be found in the corresponding directory, `system`.
 
-You can find the starting Java project in the `start` directory. This project is a multi-module Maven project that is made up of the `system` and `inventory` microservices. Each microservice is located in its own corresponding directory, `system` and `inventory`.
-
-To try out the microservices by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
+To try out the microservice by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
 [role='command']
-```
+----
 mvn -pl system liberty:run
-```
+----
 
-// static guide instructions:
-ifndef::cloud-hosted[]
-Open another command-line session and run the following Maven goal to build the `inventory` microservice and run it inside Open Liberty:
-[role='command']
-```
-mvn -pl inventory liberty:run
-```
-
-After you see the following message in both command-line sessions, both of your services are ready:
+After you see the following message in the command-line session, your service is ready:
 
 [source, role="no_copy"]
 ----
 The defaultServer server is ready to run a smarter planet.
 ----
 
-To access the `inventory` service, which displays the current contents of the inventory, see http://localhost:9081/inventory/systems[http://localhost:9081/inventory/systems^].
-
 To access the `system` service, which shows the system properties of the running JVM, see http://localhost:9080/system/properties[^].
 
-You can add the system properties of your localhost to the `inventory` service at http://localhost:9081/inventory/systems/localhost[http://localhost:9081/inventory/systems/localhost^].
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-Select **Terminal** > **New Terminal** from the menu of the IDE to open another command-line session and run the following Maven goal to build the **inventory** microservice and run it inside Open Liberty:
-```bash
-cd /home/project/guide-containerize-paketo/start
-mvn -pl inventory liberty:run
-```
-
-Select **Terminal** > **New Terminal** from the menu of the IDE to open a new command-line session. To access the **inventory** service, which displays the current contents of the inventory, run the following curl command: 
-```bash
-curl -s http://localhost:9081/inventory/systems | jq
-```
-
-After you see the following message in both command-line sessions, both of your services are ready:
-
-```
-The defaultServer server is ready to run a smarter planet.
-```
-
-The **system** service shows the system properties of the running JVM and can be found by running the following curl command:
-```bash
-curl -s http://localhost:9080/system/properties | jq
-```
-
-The system properties of your localhost can be added to the **inventory** service at **http://localhost:9081/inventory/systems/localhost**. Run the following curl command:
-```bash
-curl -s http://localhost:9081/inventory/systems/localhost | jq
-```
-endif::[]
-
 // static guide instructions:
-ifndef::cloud-hosted[]
-After you are finished checking out the microservices, stop the Open Liberty servers by pressing `CTRL+C` in the command-line sessions where you ran the servers. Alternatively, you can run the `liberty:stop` goal in another command-line session:
+After you are finished checking out the `system` service, stop the Open Liberty server by pressing `CTRL+C` in the command-line session where you ran the server. Alternatively, you can run hte `liberty:stop` goal in another command-line session:
 [role='command']
-```
+----
 mvn -pl system liberty:stop
-mvn -pl inventory liberty:stop
-```
-endif::[]
+----
 
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-After you are finished checking out the microservices, stop the Open Liberty servers by pressing **CTRL+C** in the command-line sessions where you ran the servers. Alternatively, you can run the **liberty:stop** goal in another command-line session from the 
-**start** directory:
-```bash
-cd /home/project/guide-containerize/start
-mvn -pl system liberty:stop
-mvn -pl inventory liberty:stop
-```
-endif::[]
+To package your microservice, run the maven package goal to build the application `.war` files from the start directory so that the `.war` file is in the `system/target` directory.
 
-To package your microservices, run the Maven package goal to build the application `.war` files from the start directory so that the `.war` files are in the `system/target` and `inventory/target` directories.
 [role='command']
-```
+----
 mvn package
-```
+----
 
-To learn more about RESTful web services and how to build them, see https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service^] for details about how to build the `system` service. The `inventory` service is built in a similar way.
+To learn more about RESTful web services and how to build them, see https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service^] for details about how to build the `system` service. 
 
 == Building images with Paketo buildpacks
 
-Before attempting to build your images, ensure that you have installed the https://buildpacks.io/docs/tools/pack/[Pack CLI] as it is needed to run the build processes for Paketo.
+Before attempting to build your image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase images with buildpacks.
 
-`Paketo` buildpacks are an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, such as the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
+`Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, including the Open Liberty server. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Containers Initiative (OCI) images that can be ran in nearly any container manager.
 
-`Paketo` offers many benefits compared to more traditonal ways of generating images from methods such as using `docker build`, which include:
+When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
-The benefits of using `Paketo` over other build methods such as `docker build`, include:
+The benefits of using `Paketo Buildpacks` with the `Pack CLI` to build your application compared to other traditional build tools, include:
 
-* Generating container images without a Dockerfile.
+* Generating your application images without a Containerfile or Dockerfile.
 * Advanced image cacheing for faster rebuild times of your application.
 * Generate a software bill-of-materials (SBOM) which provides information on the contents of your final image.
-* Optimizes image size for minimal final application image.
-* Auto-detectsion of your app's dependencies directly from it's source code.
-* Patches OS-Level vulnerabilites in your images automatically.
+* Optimizing image size for minimal final application image.
+* Auto-detection and installation of your app's dependencies directly from it's source code.
+* Patching OS-level vulnerabilites in your images automatically upon rebuilding.
 
-Before building your images, set your default builder to the `paketo-buildpacks` builder with the following command:
+
+=== Setting your default builder
+
+The default builder is the base builder used by all other commands that are run with the `Pack CLI`, in this instance we set this to the `Paketo Buildpacks` builder to use the features it offers.
+
+Set your `pack` default builder to the `Paketo Buildpacks` builder with the following command:
 [role='command']
 ```
 pack config default-builder gcr.io/paketo-buildpacks/builder:base
 ```
 
-The `paketo-buildpacks` is the `builder:base` version which is the most basic version of builder to interact with your source code. There is an option, `builder:full` which contains more builders if the `builder:base` is insufficient.
+A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 
-A `builder` is an image comprised of three parts:
-
-* A set of buildpacks that apply your applications dependencies.
+* A set of buildpacks that apply your application's dependencies.
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-Next, construct your images with the following `pack build` command and the applicable flags and variables to customize your Open Liberty image:
+=== Building the image
+
+Now, to begin constructing your `system` service image, run the following `pack build` command with the applicable flags and environment variables to customize your Open Liberty image:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.docker_section]
+--
+
 [role='command']
-```
-pack build --path ./system \
---env BP_JAVA_APP_SERVER=liberty \
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
---env BP_LIBERTY_PROFILE=jakartaee9 \
---buildpack paketo-buildpacks/eclipse-openj9 \
---buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+----
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+----
+--
 
-pack build --path ./inventory \
---env BP_JAVA_APP_SERVER=liberty \
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
---env BP_LIBERTY_PROFILE=jakartaee9 \
---buildpack paketo-buildpacks/eclipse-openj9 \
---buildpack paketo-buildpacks/java inventory:1.0-SNAPSHOT
-```
+[.tab_content.podman_section]
+--
 
-The following table describes the flags and environment variables supplied to customize your Open Liberty image:
+Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
+
+[role='command']
+----
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true system:1.0-SNAPSHOT
+----
+
+If you would like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
+
+--
+
+The following table describes the flags supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
 |===
 | *Flag*                  | *Description*
 | --path                  | Relative path to your application source code.
 | --buildpack             | Buildpack to be included in the OCI build process.
 | --env                   | Enviornment variables for the `pack build` process.
-| BP_JAVA_APP_SERVER      | The application server to use, in the case it's `Liberty`.
-| BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` information from Maven into the `pack build` process.
+| --docker-host           | Address to docker daemon that will be exposed to build container. Use `inherit` value when the docker daemon address is set to the DOCKER_HOST environment variable.
+| --trust-builder         | Trust the provided builder.
+|===
+
+For more information and to dive deeper on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build command Documentation^]. 
+
+The following table describes the environment variables supplied for your application image. 
+[cols="35, 100", options="header"] 
+|===
+| *Enviornment Variables* | *Description*
+| BP_JAVA_APP_SERVER      | The application server to use.
+| BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` and the `.war` file from the Maven process into the `pack build` process.
 | BP_LIBERTY_PROFILE      | The Liberty profile to use. Defaults to `full`.
 |===
 
+
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
-As well, learn more about Docker on the https://www.docker.com/what-docker[official Docker page^].
 
-== Running your microservices in Docker containers
-Now that your two images are built, you will run your microservices in Docker containers:
+== Running your microservices in containers
 
+Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with which container manager you have configured with `Pack CLI`.
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.podman_section]
+--
 [role='command']
-```
-docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
-docker run --rm -d --name inventory -p 9081:9081 inventory:1.0-SNAPSHOT
-```
+----
+podman run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
+----
+--
+
+[.tab_content.docker_section]
+--
+[role='command']
+----
+docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT 
+----
+--
 
 The following table describes the flags in these commands:
 
@@ -242,127 +214,43 @@ The following table describes the flags in these commands:
 | -p     | Maps the host ports to the container ports. For example: `-p <HOST_PORT>:<CONTAINER_PORT>`
 |===
 
-Next, run the `docker ps` command to verify that your containers are started:
+Next, run the following command to verify that your container has been started:
 
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.podman_section]
+--
 [role='command']
-```
+----
+podman ps
+----
+--
+
+[.tab_content.docker_section]
+--
+[role='command']
+----
 docker ps
-```
+----
+--
 
 Make sure that your containers are running and show `Up` as their status:
 
 [role="no_copy"]
 ----
 CONTAINER ID    IMAGE                   COMMAND                  CREATED          STATUS          PORTS                                        NAMES
-2b584282e0f5    inventory:1.0-SNAPSHOT  "/opt/ol/helpers/run…"   2 seconds ago    Up 1 second     9080/tcp, 9443/tcp, 0.0.0.0:9081->9081/tcp   inventory
 99a98313705f    system:1.0-SNAPSHOT     "/opt/ol/helpers/run…"   3 seconds ago    Up 2 seconds    0.0.0.0:9080->9080/tcp, 9443/tcp             system
 ----
 
-If a problem occurs and your containers exit prematurely, the containers don't appear in the container list that the `docker ps` command displays. Instead, your containers appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` and `docker logs inventory` commands to view the container logs for any potential problems. Run the `docker stats system` and `docker stats inventory` commands to display a live stream of usage statistics for your containers. You can also double-check that your Dockerfiles are correct. When you find the cause of the issues, remove the faulty containers with the `docker rm system` and `docker rm inventory` commands. Rebuild your images, and start the containers again.
+If a problem occurs and your containers exit prematurely, the containers don't appear in the container list that the `docker ps` command displays. Instead, your container appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` command to view the container logs for any potential problems. Run the `docker stats system` commands to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `docker rm system` command. Rebuild your image, and start the container again.
 
 // static guide instructions:
-ifndef::cloud-hosted[]
-To access the application, go to the http://localhost:9081/inventory/systems[http://localhost:9081/inventory/systems^] URL. An empty list is expected because no system properties are stored in the inventory yet. 
-endif::[]
+To acces the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
 
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-To access the application, run the following curl command. An empty list is expected because no system properties are stored in the inventory yet:
-```bash
-curl -s http://localhost:9081/inventory/systems | jq
-```
-endif::[]
-
-Next, retrieve the `system` container's IP address by running the following:
-
-[role='command']
-```
-docker inspect -f "{{.NetworkSettings.IPAddress }}" system
-```
-
-The command returns the system container IP address:
-
-[role="no_copy"]
-----
-172.17.0.2
-----
-
-In this case, the IP address for the `system` service is `172.17.0.2`. Take note of this IP address to construct the URL to view the system properties. 
-
-// static guide instructions:
-ifndef::cloud-hosted[]
-Go to the `\http://localhost:9081/inventory/systems/pass:c[[system-ip-address]]` URL by replacing `[system-ip-address]` with the IP address that you obtained earlier. You see a result in JSON format with the system properties of your local JVM. When you go to this URL, these system properties are automatically stored in the inventory. Go back to the http://localhost:9081/inventory/systems[http://localhost:9081/inventory/systems^] URL and you see a new entry for `[system-ip-address]`.
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-Run the following commands to go to the **http://localhost:9081/inventory/systems/[system-ip-address]** by replacing **[system-ip-address]** URL with the IP address that you obtained earlier:
-```bash
-SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
-curl -s http://localhost:9081/inventory/systems/{$SYSTEM_IP} | jq
-```
-
-You see a result in JSON format with the system properties of your local JVM. When you visit this URL, these system properties are automatically stored in the inventory. Run the following curl command and you see a new entry for **[system-ip-address]**:
-```bash
-curl -s http://localhost:9081/inventory/systems | jq
-```
-endif::[]
-
-== Externalizing server configuration
-
-// File 0
-inventory/server.xml
-[source, xml, linenums, indent=0, role="code_column"]
-----
-include::finish/inventory/src/main/liberty/config/server.xml[]
-----
-
-As mentioned at the beginning of this guide, one of the advantages of using containers is that they are portable and can be moved and deployed efficiently across all of your DevOps environments. Configuration often changes across different environments, and by externalizing your server configuration, you can simplify the development process.
-
-Imagine a scenario where you are developing an Open Liberty application on port `9081` but to deploy it to production, it must be available on port `9091`. To manage this scenario, you can keep two different versions of the `server.xml` file; one for production and one for development. However, trying to maintain two different versions of a file might lead to mistakes. A better solution would be to externalize the configuration of the port number and use the value of an environment variable that is stored in each environment. 
-
-In this example, you will use an environment variable to externally configure the HTTP port number of the `inventory` service. 
-
-In the [hotspot file=0]`inventory/server.xml` file, the [hotspot=httpPort file=0]`default.http.port` variable is declared and is used in the [hotspot=httpEndpoint file=0]`httpEndpoint` element to define the service endpoint. The default value of the [hotspot=httpPort file=0]`default.http.port` variable is `9081`. However, this value is only used if no other value is specified. You can replace this value in the container by using the -e flag for the podman run command. 
-
-Run the following commands to stop and remove the `inventory` container and rerun it with the `default.http.port` environment variable set:
-
-[role='command']
-```
-docker stop inventory
-docker rm inventory 
-docker run -d --name inventory -e default.http.port=9091 -p 9091:9091 inventory:1.0-SNAPSHOT
-```
-
-The `-e` flag can be used to create and set the values of environment variables in a Docker container. In this case, you are setting the `default.http.port` environment variable to `9091` for the `inventory` container.
-
-Now, when the service is starting up, Open Liberty finds the `default.http.port` environment variable and uses it to set the value of the [hotspot=httpPort file=0]`default.http.port` variable to be used in the HTTP endpoint.
-
-// static guide instructions:
-ifndef::cloud-hosted[]
-The `inventory` service is now available on the new port number that you specified. You can see the contents of the inventory at the http://localhost:9091/inventory/systems[http://localhost:9091/inventory/systems^] URL. You can add your local system properties at `\http://localhost:9091/inventory/systems/pass:c[[system-ip-address]]` by replacing `[system-ip-address]` with the IP address that you obtained in the previous section. The `system` service remains unchanged and is available at the http://localhost:9080/system/properties[http://localhost:9080/system/properties^] URL.
-endif::[]
-
-// cloud-hosted guide instructions:
-ifdef::cloud-hosted[]
-The **inventory** service is now available on the new port number that you specified. You can see the contents of the inventory at the **http://localhost:9091/inventory/systems** URL. Run the following curl command:
-```bash
-curl -s http://localhost:9091/inventory/systems | jq
-```
-
-You can add your local system properties at the **http://localhost:9091/inventory/systems/[system-ip-address]** URL by replacing **[system-ip-address]** with the IP address that you obtained in the previous section. Run the following commands:
-```bash
-SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
-curl -s http://localhost:9091/inventory/systems/{$SYSTEM_IP} | jq
-```
-
-The **system** service remains unchanged and is available at the **http://localhost:9080/system/properties** URL. Run the following curl command:
-```bash
-curl -s http://localhost:9080/system/properties | jq
-```
-endif::[]
-
-You can externalize the configuration of more than just the port numbers. To learn more about Open Liberty server configuration, check out the https://openliberty.io/docs/latest/reference/config/server-configuration-overview.html[Server Configuration Overview^] docs. 
+After you have verifyied that your `system` service is up and running in your contiainer, you are able to stop and remove your container with the following command:
 
 == Testing the microservices
 
@@ -382,44 +270,38 @@ include::finish/system/src/test/java/it/io/openliberty/guides/system/SystemEndpo
 
 The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a `200` response code from the `system` service endpoint.
 
-[role="code_command hotspot file=1", subs="quotes"]
-----
-#Create the `InventoryEndpointIT` class.#
-`inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java`
-----
-
-InventoryEndpointIT.java
-[source, java, linenums, indent=0, role="code_column hide_tags=copyright"]
-----
-include::finish/inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java[]
-----
-
-* The [hotspot=testEmptyInventory file=1]`testEmptyInventory()` method checks that the `inventory` service has a total of 0 systems before anything is added to it.
-* The [hotspot=testHostRegistration file=1]`testHostRegistration()` method checks that the `system` service was added to `inventory` properly.
-* The [hotspot=testSystemPropertiesMatch file=1]`testSystemPropertiesMatch()` checks that the `system` properties match what was added into the `inventory` service.
-* The [hotspot=testUnknownHost file=1]`testUnknownHost()` method checks that an error is raised if an unknown host name is being added into the `inventory` service.
-* The [hotspot=systemServiceIp file=1]`systemServiceIp` variable has the same value as the IP address that you retrieved in the previous section when you manually added the `system` service into the `inventory` service. This value of the IP address is passed in when you run the tests.
-
 === Running the tests
 // static guide instructions
 ifndef::cloud-hosted[]
-Run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
+Begin with getting the IP address of your container that is running your `system` service with the following command:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.podman_section]
+--
+[role='command']
+----
+podman inspect system -f "{{ .NetworkSettings.IPAddress }}"
+----
+--
+
+[.tab_content.docker_section]
+--
+[role='command']
+----
+docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
+----
+--
+
+Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
 [role='command']
 ```
 mvn package
-mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9081 -Dsystem.http.port=9080
-```
-endif::[]
-
-// cloud-hosted guide instructions
-ifdef::cloud-hosted[]
-Run the Maven **package** goal to compile the test classes. Run the Maven **failsafe** goal to test the services that are running in the Docker containers by setting **-Dsystem.ip** to the IP address that you determined previously.
-
-```bash
-SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
-mvn package
-mvn failsafe:integration-test -Dsystem.ip="$SYSTEM_IP" -Dinventory.http.port=9091 -Dsystem.http.port=9080
+mvn failsafe:integration-test -Dsystem.ip=[system-ip-address]  -Dsystem.http.port=9080
 ```
 endif::[]
 
@@ -436,26 +318,30 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.653 s - in it.
 Results:
 
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-
--------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running it.io.openliberty.guides.inventory.InventoryEndpointIT
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.935 s - in it.io.openliberty.guides.inventory.InventoryEndpointIT
-
-Results:
-
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 ----
 
 When you are finished with the services, run the following commands to stop and remove your containers:
 
-[role='command']
-```
-docker stop inventory system 
-docker rm inventory system
-```
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
 
+[.tab_content.podman_section]
+--
+[role='command']
+----
+podman stop system
+----
+--
+
+[.tab_content.docker_section]
+--
+[role='command']
+----
+docker stop system
+----
+--
 
 == Great work! You're done!
 
