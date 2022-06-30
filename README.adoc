@@ -125,61 +125,33 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A lifecycle which analyzes, detects and assembles your final application image.
 
 Now, to begin constructing your `system` service image, run the following `pack build` command with the applicable flags and environment variables to customize your Open Liberty image:
-include::{common-includes}/os-tabs.adoc[]
-
-[.tab_content.windows_section]
---
-Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
-
-[role='command']
-----
-pack build --path ./system ^
---env BP_JAVA_APP_SERVER=liberty ^
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" ^
---env BP_LIBERTY_PROFILE=jakartaee9 ^
---buildpack paketo-buildpacks/eclipse-openj9 ^
---buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
-----
---
-
-[.tab_content.mac_section.linux_section.podman_section.docker_section]
---
 
 [.tab_link.podman_link]
 `*PODMAN*`
 [.tab_link.docker_link]
 `*DOCKER*`
 
-[.tab_content.docker_section.mac_section.linux_section]
+[.tab_content.docker_section]
 --
-If your `Docker` is your preferred container manager, then run the following command: 
+
 [role='command']
 ----
-pack build --path ./system \
---env BP_JAVA_APP_SERVER=liberty \
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
---env BP_LIBERTY_PROFILE=jakartaee9 \
---buildpack paketo-buildpacks/eclipse-openj9 \
---buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
 ----
 --
 
-[.tab_content.podman_section.mac_section.linux_section]
+[.tab_content.podman_section]
 --
-Otherwise, if `Podman` is your current container manger, run the following command, instead:
+
+Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
+
 [role='command']
 ----
-pack build --path ./system \
---env BP_JAVA_APP_SERVER=liberty \
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
---env BP_LIBERTY_PROFILE=jakartaee9 \
---buildpack paketo-buildpacks/eclipse-openj9 \
---buildpack paketo-buildpacks/java \
---docker-host=inherit \
---trust-builder=true system:1.0-SNAPSHOT
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true system:1.0-SNAPSHOT
 ----
+
 If you'd like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation to configure it for `Podman`.
---
+
 --
 
 The following table describes the flags supplied to customize your Open Liberty image:
@@ -259,7 +231,7 @@ Then, run the following server command to create your packaged Open Liberty serv
 You should see the following output indicating that your server was packaged successfully:
 [source, role='no_copy']
 ----
-Server defaultServer package complete in ~/[path-to-repo]/{projectid}/start/inventory/target\liberty\wlp\usr\servers\defaultServer\defaultServer.zip.
+Server defaultServer package complete in ~/[path-to-repo]/paketo-buildpacks-intro/start/inventory/target\liberty\wlp\usr\servers\defaultServer\defaultServer.zip.
 ----
 
 Finally, with your newly packaged server, run the following command to build your application image with `Paketo Buildpacks`:
@@ -284,7 +256,7 @@ Now that your `system` image is built, you will now run your microservice in a c
 [.tab_link.docker_link]
 `*DOCKER*`
 
-[.tab_content.podman_section.windows_section.mac_section.linux_section]
+[.tab_content.podman_section]
 --
 [role='command']
 ----
@@ -292,7 +264,7 @@ podman run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
 ----
 --
 
-[.tab_content.docker_section.windows_section.mac_section.linux_section]
+[.tab_content.docker_section]
 --
 [role='command']
 ----
