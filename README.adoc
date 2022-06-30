@@ -8,7 +8,7 @@
 //
 :projectid: paketo-buildpacks-intro
 :page-layout: guide-multipane
-:page-duration: 20 minutes
+:page-duration: 15 minutes
 :page-releasedate: 2022-07-01
 :page-description: Learn how to build your microservices with Paketo and Open Liberty and run them in a container manager.
 :page-tags: ['Docker']
@@ -36,7 +36,7 @@ You can easily deploy your microservices in different environments in a lightwei
 
 You'll learn how to build your microservices into OCI images with `Paketo buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image.
 
-The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. The guide demonstraes how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
+The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
 == Additional prerequisites
 
@@ -91,11 +91,11 @@ To learn more about RESTful web services and how to build them, see https://open
 
 Before attempting to build your image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase images with buildpacks.
 
-`Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, including the Open Liberty runtime. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Container Initiative (OCI) images that can be ran in nearly any container manager.
+`Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, including the Open Liberty server. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Containers Initiative (OCI) images that can be ran in nearly any container manager.
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
-The benefits of using `Paketo buildpacks` with the `Pack CLI` to build your application compared to other traditional build tools, include:
+The benefits of using `Paketo Buildpacks` with the `Pack CLI` to build your application compared to other traditional build tools, include:
 
 * Generating your application images without a Containerfile or Dockerfile.
 * Advanced image cacheing for faster rebuild times of your application.
@@ -104,7 +104,12 @@ The benefits of using `Paketo buildpacks` with the `Pack CLI` to build your appl
 * Auto-detection and installation of your app's dependencies directly from it's source code.
 * Patching OS-level vulnerabilites in your images automatically upon rebuilding.
 
-To start building your OCI image, set your `pack` default builder to the `Paketo buildpacks` builder with the following command:
+
+=== Setting your default builder
+
+The default builder is the base builder used by all other commands that are run with the `Pack CLI`, in this instance we set this to the `Paketo Buildpacks` builder to use the features it offers.
+
+Set your `pack` default builder to the `Paketo Buildpacks` builder with the following command:
 [role='command']
 ```
 pack config default-builder gcr.io/paketo-buildpacks/builder:base
@@ -116,50 +121,36 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-Now, to begin constructing your `system` service image, run the following `pack build` command with the applicable flags and environment variables to customize your Open Liberty image:
-include::{common-includes}/os-tabs.adoc[]
+=== Building the image
 
-[.tab_content.windows_section]
+Now, to begin constructing your `system` service image, run the following `pack build` command with the applicable flags and environment variables to customize your Open Liberty image:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.docker_section]
 --
+
+[role='command']
+----
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+----
+--
+
+[.tab_content.podman_section]
+--
+
 Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
 
 [role='command']
 ----
-pack build --path ./system ^
---env BP_JAVA_APP_SERVER=liberty ^
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" ^
---env BP_LIBERTY_PROFILE=jakartaee9 ^
---buildpack paketo-buildpacks/eclipse-openj9 ^
---buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
-----
---
-
-[.tab_content.mac_section.linux_section]
---
-If your `Docker` is your preferred container manager, then run the following command: 
-[role='command']
-----
-pack build --path ./system \
---env BP_JAVA_APP_SERVER=liberty \
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
---env BP_LIBERTY_PROFILE=jakartaee9 \
---buildpack paketo-buildpacks/eclipse-openj9 \
---buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true system:1.0-SNAPSHOT
 ----
 
-Otherwise, if `Podman` is your current container manger, run the following command, instead:
-[role='command']
-----
-pack build --path ./system \
---env BP_JAVA_APP_SERVER=liberty \
---env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
---env BP_LIBERTY_PROFILE=jakartaee9 \
---buildpack paketo-buildpacks/eclipse-openj9 \
---buildpack paketo-buildpacks/java \
---docker-host=inherit \
---trust-builder=true system:1.0-SNAPSHOT
-----
-If you'd like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation to configure it for `Podman`.
+If you would like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
+
 --
 
 The following table describes the flags supplied to customize your Open Liberty image:
@@ -173,14 +164,14 @@ The following table describes the flags supplied to customize your Open Liberty 
 | --trust-builder         | Trust the provided builder.
 |===
 
-For more information and to dive deeper on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build Documentation^]. 
+For more information and to dive deeper on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build command Documentation^]. 
 
 The following table describes the environment variables supplied for your application image. 
 [cols="35, 100", options="header"] 
 |===
 | *Enviornment Variables* | *Description*
-| BP_JAVA_APP_SERVER      | The application server to use, in the case it's `Liberty`.
-| BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` information from Maven into the `pack build` process.
+| BP_JAVA_APP_SERVER      | The application server to use.
+| BP_MAVEN_BUILT_ARTIFACT | Include the `server.xml` and the `.war` file from the Maven process into the `pack build` process.
 | BP_LIBERTY_PROFILE      | The Liberty profile to use. Defaults to `full`.
 |===
 
@@ -189,7 +180,7 @@ Explore all of the flags, variables and options available for the Paketo Liberty
 
 == Running your microservices in containers
 
-Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Container Initiative (OCI) images, they are compatible with which container manager you have configured with `Pack CLI`.
+Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with which container manager you have configured with `Pack CLI`.
 
 [.tab_link.podman_link]
 `*PODMAN*`
@@ -259,40 +250,7 @@ If a problem occurs and your containers exit prematurely, the containers don't a
 // static guide instructions:
 To acces the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
 
-== Externalizing server configuration
-
-// File 0
-inventory/server.xml
-[source, xml, linenums, indent=0, role="code_column"]
-----
-include::finish/inventory/src/main/liberty/config/server.xml[]
-----
-
-As mentioned at the beginning of this guide, one of the advantages of using containers is that they are portable and can be moved and deployed efficiently across all of your DevOps environments. Configuration often changes across different environments, and by externalizing your server configuration, you can simplify the development process.
-
-Imagine a scenario where you are developing an Open Liberty application on port `9081` but to deploy it to production, it must be available on port `9091`. To manage this scenario, you can keep two different versions of the `server.xml` file; one for production and one for development. However, trying to maintain two different versions of a file might lead to mistakes. A better solution would be to externalize the configuration of the port number and use the value of an environment variable that is stored in each environment. 
-
-In this example, you will use an environment variable to externally configure the HTTP port number of the `inventory` service. 
-
-In the [hotspot file=0]`inventory/server.xml` file, the [hotspot=httpPort file=0]`default.http.port` variable is declared and is used in the [hotspot=httpEndpoint file=0]`httpEndpoint` element to define the service endpoint. The default value of the [hotspot=httpPort file=0]`default.http.port` variable is `9081`. However, this value is only used if no other value is specified. You can replace this value in the container by using the -e flag for the podman run command. 
-
-Run the following commands to stop and remove the `inventory` container and rerun it with the `default.http.port` environment variable set:
-
-[role='command']
-```
-docker stop inventory
-docker rm inventory 
-docker run -d --name inventory -e default.http.port=9091 -p 9091:9091 inventory:1.0-SNAPSHOT
-```
-
-The `-e` flag can be used to create and set the values of environment variables in a Docker container. In this case, you are setting the `default.http.port` environment variable to `9091` for the `inventory` container.
-
-Now, when the service is starting up, Open Liberty finds the `default.http.port` environment variable and uses it to set the value of the [hotspot=httpPort file=0]`default.http.port` variable to be used in the HTTP endpoint.
-
-// static guide instructions:
-The `inventory` service is now available on the new port number that you specified. You can see the contents of the inventory at the http://localhost:9091/inventory/systems[http://localhost:9091/inventory/systems^] URL. You can add your local system properties at `\http://localhost:9091/inventory/systems/pass:c[[system-ip-address]]` by replacing `[system-ip-address]` with the IP address that you obtained in the previous section. The `system` service remains unchanged and is available at the http://localhost:9080/system/properties[http://localhost:9080/system/properties^] URL.
-
-You can externalize the configuration of more than just the port numbers. To learn more about Open Liberty server configuration, check out the https://openliberty.io/docs/latest/reference/config/server-configuration-overview.html[Server Configuration Overview^] docs. 
+After you have verifyied that your `system` service is up and running in your contiainer, you are able to stop and remove your container with the following command:
 
 == Testing the microservices
 
@@ -314,13 +272,38 @@ The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a 
 
 === Running the tests
 // static guide instructions
-Run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
+ifndef::cloud-hosted[]
+Begin with getting the IP address of your container that is running your `system` service with the following command:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.podman_section]
+--
+[role='command']
+----
+podman inspect system -f "{{ .NetworkSettings.IPAddress }}"
+----
+--
+
+[.tab_content.docker_section]
+--
+[role='command']
+----
+docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
+----
+--
+
+Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
 [role='command']
 ```
 mvn package
 mvn failsafe:integration-test -Dsystem.ip=[system-ip-address]  -Dsystem.http.port=9080
 ```
+endif::[]
 
 If the tests pass, you see output similar to the following example:
 
@@ -335,22 +318,26 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.653 s - in it.
 Results:
 
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-
 ----
 
-When you are finished with the service, run the following command to stop and remove your container:
+When you are finished with the services, run the following commands to stop and remove your containers:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
 
 [.tab_content.podman_section]
-[role='command']
 --
+[role='command']
 ----
-podman stop system 
+podman stop system
 ----
 --
 
 [.tab_content.docker_section]
-[role='command']
 --
+[role='command']
 ----
 docker stop system
 ----
