@@ -104,14 +104,6 @@ The benefits of using `Paketo buildpacks` with the `Pack CLI` to build your appl
 * Auto-detection and installation of your app's dependencies directly from it's source code.
 * Patching OS-level vulnerabilites in your images automatically upon rebuilding.
 
-Using `Paketo Buildpacks` with `Pack CLI` offers your the ability to build your microservice images in two different ways. First being, directly building your application images from your raw application source code. The second being, using your local installation of Open Liberty and using an already packaged Liberty server.
-
-You'll leveraged both of these build methods in this guide by building each of your `system` and `inventory` microservices with each build method.
-
-=== Building images directly from application source.
-
-You will start with building your `system` microservice from it's application source.
-
 To start building your OCI image, set your `pack` default builder to the `Paketo buildpacks` builder with the following command:
 [role='command']
 ```
@@ -150,7 +142,7 @@ Currently, `Pack CLI` does not officially support building images for `Podman` o
 pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true system:1.0-SNAPSHOT
 ----
 
-If you'd like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation to configure it for `Podman`.
+If you'd like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
 
 --
 
@@ -178,74 +170,6 @@ The following table describes the environment variables supplied for your applic
 
 
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
-
-=== Building images from a Packaged Open Liberty Server
-
-Next, you ar going to build your `inventory` microservice with a packaged Open Liberty server that you will package from your application source. 
-
-include::{common-includes}/os-tabs.adoc[]
-
-Start with navigating to the following directory
-
-[.tab_content.windows_section.podman_section.docker_section]
---
-[role='command']
-----
-inventory\target\liberty\wlp\
-----
-
-Then, run the following server command to create your packaged Open Liberty server.
-
-[role='command']
-----
-.\bin\server package defaultServer --include=usr
-----
-
-You should see the following output indicating that your server was packaged successfully:
-[source, role='no_copy']
-----
-Server defaultServer package complete in C:[path-to-repo]\{projectid}}\start\inventory\target\liberty\wlp\usr\servers\defaultServer\defaultServer.zip.
-----
-
-Finally, with your newly packaged server, run the following command to build your application image with `Paketo Buildpacks`:
-[role='command']
-----
-pack build --env BP_JAVA_APP_SERVER=liberty --path .\inventory\target\liberty\wlp\usr\servers\defaultServer\defaultServer.zip inventory:1.0-SNAPSHOT
-----
---
-
-[.tab_content.mac_section.linux_section.podman_section.docker_section]
---
-[role='command']
-----
-inventory/target/liberty/wlp/
-----
-
-Then, run the following server command to create your packaged Open Liberty server.
-
-[role='command']
-----
-./bin/server package defaultServer --include=usr
-----
-
-You should see the following output indicating that your server was packaged successfully:
-[source, role='no_copy']
-----
-Server defaultServer package complete in ~/[path-to-repo]/paketo-buildpacks-intro/start/inventory/target\liberty\wlp\usr\servers\defaultServer\defaultServer.zip.
-----
-
-Finally, with your newly packaged server, run the following command to build your application image with `Paketo Buildpacks`:
-[role='command']
-----
-pack build --env BP_JAVA_APP_SERVER=liberty --path ./inventory/target/liberty/wlp/usr/servers/defaultServer/defaultServer.zip inventory:1.0-SNAPSHOT
-----
---
-
-Lastly, you should the following output after running your `pack build` command:
-[source, role='no_copy']
-----
-Successfully built image inventory:1.0-SNAPSHOT
-----
 
 == Running your microservices in containers
 
