@@ -104,6 +104,11 @@ The benefits of using `Paketo Buildpacks` with the `Pack CLI` to build your appl
 * Auto-detection and installation of your app's dependencies directly from it's source code.
 * Patching OS-level vulnerabilites in your images automatically upon rebuilding.
 
+
+=== Setting your default builder
+
+The default builder is the base builder used by all other commands that are run with the `Pack CLI`, in this instance we set this to the `Paketo Buildpacks` builder to use the features it offers.
+
 Set your `pack` default builder to the `Paketo Buildpacks` builder with the following command:
 [role='command']
 ```
@@ -116,7 +121,7 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-The default builder is the base builder used by all other commands that are run with the `Pack CLI`, in this instance we set this to the `Paketo Buildpacks` builder to use the features it offers.
+=== Building the image
 
 Now, to begin constructing your `system` service image, run the following `pack build` command with the applicable flags and environment variables to customize your Open Liberty image:
 
@@ -246,6 +251,113 @@ If a problem occurs and your containers exit prematurely, the containers don't a
 To acces the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
 
 After you have verifyied that your `system` service is up and running in your contiainer, you are able to stop and remove your container with the following command:
+
+[.tab_link.podman_link]
+`*PODMAN*`
+[.tab_link.docker_link]
+`*DOCKER*`
+
+[.tab_content.podman_section]
+--
+[role='command']
+----
+podman stop system
+----
+--
+
+[.tab_content.docker_section]
+--
+[role='command']
+----
+docker stop system
+----
+--
+
+== Testing the microservices
+
+You can test your microservices manually by hitting the endpoints or with automated tests that check your running Docker containers.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Create the `SystemEndpointIT` class.#
+`system/src/test/java/it/io/openliberty/guides/system/SystemEndpointIT.java`
+----
+
+SystemEndpointIT.java
+[source, java, linenums, indent=0, role="code_column hide_tags=copyright"]
+----
+include::finish/system/src/test/java/it/io/openliberty/guides/system/SystemEndpointIT.java[]
+----
+
+The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a `200` response code from the `system` service endpoint.
+
+[role="code_command hotspot file=1", subs="quotes"]
+----
+#Create the `InventoryEndpointIT` class.#
+`inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java`
+----
+
+InventoryEndpointIT.java
+[source, java, linenums, indent=0, role="code_column hide_tags=copyright"]
+----
+include::finish/inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java[]
+----
+
+* The [hotspot=testEmptyInventory file=1]`testEmptyInventory()` method checks that the `inventory` service has a total of 0 systems before anything is added to it.
+* The [hotspot=testHostRegistration file=1]`testHostRegistration()` method checks that the `system` service was added to `inventory` properly.
+* The [hotspot=testSystemPropertiesMatch file=1]`testSystemPropertiesMatch()` checks that the `system` properties match what was added into the `inventory` service.
+* The [hotspot=testUnknownHost file=1]`testUnknownHost()` method checks that an error is raised if an unknown host name is being added into the `inventory` service.
+* The [hotspot=systemServiceIp file=1]`systemServiceIp` variable has the same value as the IP address that you retrieved in the previous section when you manually added the `system` service into the `inventory` service. This value of the IP address is passed in when you run the tests.
+
+=== Running the tests
+// static guide instructions
+ifndef::cloud-hosted[]
+Run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
+
+[role='command']
+```
+mvn package
+mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9081 -Dsystem.http.port=9080
+```
+endif::[]
+
+// cloud-hosted guide instructions
+ifdef::cloud-hosted[]
+Run the Maven **package** goal to compile the test classes. Run the Maven **failsafe** goal to test the services that are running in the Docker containers by setting **-Dsystem.ip** to the IP address that you determined previously.
+
+```bash
+SYSTEM_IP=`docker inspect -f "{{.NetworkSettings.IPAddress }}" system`
+mvn package
+mvn failsafe:integration-test -Dsystem.ip="$SYSTEM_IP" -Dinventory.http.port=9091 -Dsystem.http.port=9080
+```
+endif::[]
+
+If the tests pass, you see output similar to the following example:
+
+[role="no_copy"]
+----
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.653 s - in it.io.openliberty.guides.system.SystemEndpointIT
+
+Results:
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.935 s - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+
+Results:
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+----
+
+When you are finished with the services, run the following commands to stop and remove your containers:
 
 [.tab_link.podman_link]
 `*PODMAN*`
