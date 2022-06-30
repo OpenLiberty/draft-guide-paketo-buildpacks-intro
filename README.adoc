@@ -291,8 +291,7 @@ include::finish/inventory/src/test/java/it/io/openliberty/guides/inventory/Inven
 === Running the tests
 // static guide instructions
 ifndef::cloud-hosted[]
-Run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
-
+Begin with getting the IP address of your container that is running your `system` service with the following command:
 
 [.tab_link.podman_link]
 `*PODMAN*`
@@ -314,6 +313,8 @@ podman inspect system -f "{{ .NetworkSettings.IPAddress }}"
 docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
 ----
 --
+
+Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
 [role='command']
 ```
