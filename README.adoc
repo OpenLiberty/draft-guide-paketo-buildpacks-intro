@@ -32,9 +32,10 @@ Learn how to build your microservices with Paketo and Open Liberty and run them 
 
 == What you'll learn
 
-You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
 
-You'll learn how to build your microservices into OCI images with `Paketo buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image.
+You'll learn how to build your microservices into Open Containeris Initiative (OCI) images with `Paketo buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image.
+
+You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
 
 The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
@@ -91,7 +92,7 @@ To learn more about RESTful web services and how to build them, see https://open
 
 Before attempting to build your image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase images with buildpacks.
 
-`Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and framworks, including the Open Liberty server. A `buildpack` is a set of executables that inspects and transforms your application source code into Open Containers Initiative (OCI) images that can be ran in nearly any container manager.
+`Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and frameworks, including the Open Liberty server. A `buildpack` is a set of executables that inspects and transforms your application source code into OCI images that can be ran in nearly any container manager.
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
@@ -107,19 +108,19 @@ The benefits of using `Paketo Buildpacks` with the `Pack CLI` to build your appl
 
 === Setting your default builder
 
-The default builder is the base builder used by all other commands that are run with the `Pack CLI`, in this instance we set this to the `Paketo Buildpacks` builder to use the features it offers.
+A `builder` in the buildpack ecosystem, is an image comprised of three parts:
+
+* A set of buildpacks that apply your application's dependencies.
+* A stack, which provides the OS layer for your appliation image.
+* A lifecycle which analyzes, detects and assembles your final application image.
+
+The default builder is the base builder used by all other commands that are run with the `Pack CLI`, in this instance we set the default builder to the `Paketo Buildpacks` builder to use the features it offers.
 
 Set your `pack` default builder to the `Paketo Buildpacks` builder with the following command:
 [role='command']
 ```
 pack config default-builder gcr.io/paketo-buildpacks/builder:base
 ```
-
-A `builder` in the buildpack ecosystem, is an image comprised of three parts:
-
-* A set of buildpacks that apply your application's dependencies.
-* A stack, which provides the OS layer for your appliation image.
-* A lifecycle which analyzes, detects and assembles your final application image.
 
 === Building the image
 
@@ -142,7 +143,7 @@ pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT
 [.tab_content.podman_section]
 --
 
-Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so for the time being, you are limited to using `Docker` exclusively.
+Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so you are limited to using `Docker` exclusively.
 
 [role='command']
 ----
@@ -152,6 +153,14 @@ pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT
 If you would like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
 
 --
+
+After running your `pack build` command, the following output verifies that your image can now be ran in a container:
+[source, role='no_copy']
+----
+Successfully built image system:1.0-SNAPSHOT
+----
+
+Review the tables below to understand better the anatomy of the `pack build` command you used to construct your images.
 
 The following table describes the flags supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
@@ -182,6 +191,7 @@ Explore all of the flags, variables and options available for the Paketo Liberty
 
 Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with which container manager you have configured with `Pack CLI`.
 
+Execute the following command based on your current container manager to run your newly built image:
 [.tab_link.podman_link]
 `*PODMAN*`
 [.tab_link.docker_link]
@@ -203,7 +213,7 @@ docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
 ----
 --
 
-The following table describes the flags in these commands:
+Review the following table that describes the flags in the above commands:
 
 [cols="15, 100", options="header"]
 |===
@@ -245,7 +255,8 @@ CONTAINER ID    IMAGE                   COMMAND                  CREATED        
 99a98313705f    system:1.0-SNAPSHOT     "/opt/ol/helpers/run…"   3 seconds ago    Up 2 seconds    0.0.0.0:9080->9080/tcp, 9443/tcp             system
 ----
 
-If a problem occurs and your containers exit prematurely, the containers don't appear in the container list that the `docker ps` command displays. Instead, your container appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` command to view the container logs for any potential problems. Run the `docker stats system` commands to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `docker rm system` command. Rebuild your image, and start the container again.
+// TODO this needs to be rewritten for more general container manager terminology.
+If a problem occurs and your container exits prematurely, the container won't appear in the container list that the `docker ps` command displays. Instead, your container appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` command to view the container logs for any potential problems. Run the `docker stats system` commands to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `docker rm system` command. Rebuild your image, and start the container again.
 
 // static guide instructions:
 To acces the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
