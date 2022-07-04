@@ -32,11 +32,7 @@ Learn how to build your microservices with Paketo and Open Liberty and run them 
 
 == What you'll learn
 
-
-You'll learn how to build your microservices into Open Containers Initiative (OCI) images with `Paketo Buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image. Once your microservice images are built your are then able to deploy them in different environments in a lightweight and portable manner by using containers and youir
-
-
-You'll learn how to build your microservices into Open Containers Initiative (OCI) images with `Paketo Buildpacks`. By specifying the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image. Once your microservice image is built your are then able to deploy them in different environments in a lightweight and portable manner by using containers with preferred container manager such as `Podman` or `Docker`.
+You'll learn how to build your microservices into Open Containers Initiative (OCI) images with `Paketo Buildpacks`. By specifying the buildpacks and builder to be utilized in the `pack build` command, the `Pack CLI` will construct your microservices into container images. Once your microservice image is built, your are then able to deploy them in different environments in a lightweight and portable manner by using containers with preferred container manager such as `Podman` or `Docker`.
 
 The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
@@ -74,13 +70,13 @@ The defaultServer server is ready to run a smarter planet.
 To access the `system` service, which shows the system properties of the running JVM, see http://localhost:9080/system/properties[^].
 
 // static guide instructions:
-After you are finished checking out the `system` service, stop the Open Liberty server by pressing `CTRL+C` in the command-line session where you ran the server. Alternatively, you can run hte `liberty:stop` goal in another command-line session:
+After you are finished checking out the `system` service, stop the Open Liberty server by pressing `CTRL+C` in the command-line session where you ran the server. Alternatively, you can run the `liberty:stop` goal in another command-line session:
 [role='command']
 ----
 mvn -pl system liberty:stop
 ----
 
-To package your microservice, run the maven package goal to build the application `.war` files from the start directory so that the `.war` file is in the `system/target` directory.
+To package your microservice, run the `mvn package` goal to build the application `.war` files from the start directory so that the `.war` file is in the `system/target` directory.
 
 [role='command']
 ----
@@ -93,7 +89,7 @@ To learn more about RESTful web services and how to build them, see https://open
 
 Before attempting to build your image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase images with buildpacks.
 
-`Paketo buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and frameworks, including the Open Liberty server. A `buildpack` is a set of executables that inspects and transforms your application source code into OCI images that can be ran in nearly any container manager.
+`Paketo Buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and frameworks, including the Open Liberty server. A `buildpack` is a set of executables that inspects and transforms your application source code into OCI images that can be ran in nearly any container manager.
 
 When a `buildpack` is executed, there are two phases that occur, the `detect` phase and the `build` phase. The `detect` phase checks against your application source code to ensure the buildpack is applicable. If applicable, the `build` phase will run which downloads all of the application dependencies, compile your source code and constructs a container image for your application.
 
@@ -322,11 +318,15 @@ docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
 ----
 --
 
-[.tab_content._section]
+[.tab_content.docker_section]
+--
 Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the service that is running in the `Docker` container by replacing the `[system-ip-address]` with the IP address that you determined previously.
+--
 
 [.tab_content.podman_section]
+--
 Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the `Podman` containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
+--
 
 [role='command']
 ```
