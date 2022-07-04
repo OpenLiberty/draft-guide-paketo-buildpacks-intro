@@ -255,8 +255,15 @@ CONTAINER ID    IMAGE                   COMMAND                  CREATED        
 99a98313705f    system:1.0-SNAPSHOT     "/opt/ol/helpers/run…"   3 seconds ago    Up 2 seconds    0.0.0.0:9080->9080/tcp, 9443/tcp             system
 ----
 
-// TODO this needs to be rewritten for more general container manager terminology.
+[.tab_content.docker_section]
+--
 If a problem occurs and your container exits prematurely, the container won't appear in the container list that the `docker ps` command displays. Instead, your container appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` command to view the container logs for any potential problems. Run the `docker stats system` commands to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `docker rm system` command. Rebuild your image, and start the container again.
+--
+
+[.tab_content.podman_section]
+--
+If a problem occurs and your container exits prematurely, the container won't appear in the container list that the `podman ps` command displays. Instead, your container appear with an `Exited` status when they run the `podman ps -a` command. Run the `podman logs system` command to view the container logs for any potential problems. Run the `podman stats system` command to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `podman stop system` command. Rebuild your image, and start the container again.
+--
 
 // static guide instructions:
 To acces the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
