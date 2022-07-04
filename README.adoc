@@ -33,9 +33,10 @@ Learn how to build your microservices with Paketo and Open Liberty and run them 
 == What you'll learn
 
 
-You'll learn how to build your microservices into Open Containeris Initiative (OCI) images with `Paketo buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image.
+You'll learn how to build your microservices into Open Containers Initiative (OCI) images with `Paketo Buildpacks` and run them with your preferred container manager, such as `Podman` or `Docker`. You'll specify the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image. Once your microservice images are built your are then able to deploy them in different environments in a lightweight and portable manner by using containers and youir
 
-You can easily deploy your microservices in different environments in a lightweight and portable manner by using containers. From development to production and across your DevOps environments, you can deploy your microservices consistently and efficiently with containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration.
+
+You'll learn how to build your microservices into Open Containers Initiative (OCI) images with `Paketo Buildpacks`. By specifying the buildpacks and builder to be utilized in the `pack build` command to construct your microservice image. Once your microservice image is built your are then able to deploy them in different environments in a lightweight and portable manner by using containers with preferred container manager such as `Podman` or `Docker`.
 
 The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
@@ -272,7 +273,15 @@ After you have verifyied that your `system` service is up and running in your co
 
 == Testing the microservices
 
-You can test your microservices manually by hitting the endpoints or with automated tests that check your running Docker containers.
+[.tab_content.docker_section]
+--
+You can test your microservices manually by hitting the endpoints or with automated tests that check your running Docker container.
+--
+
+[.tab_content.podman_section]
+--
+You can test your microservices manually by hitting the endpoint or with automated test that check your running `Podman` container.
+--
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -289,8 +298,7 @@ include::finish/system/src/test/java/it/io/openliberty/guides/system/SystemEndpo
 The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a `200` response code from the `system` service endpoint.
 
 === Running the tests
-// static guide instructions
-ifndef::cloud-hosted[]
+
 Begin with getting the IP address of your container that is running your `system` service with the following command:
 
 [.tab_link.podman_link]
@@ -314,16 +322,19 @@ docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
 ----
 --
 
-Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the Docker containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
+[.tab_content._section]
+Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the service that is running in the `Docker` container by replacing the `[system-ip-address]` with the IP address that you determined previously.
+
+[.tab_content.podman_section]
+Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the services that are running in the `Podman` containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
 [role='command']
 ```
 mvn package
 mvn failsafe:integration-test -Dsystem.ip=[system-ip-address]  -Dsystem.http.port=9080
 ```
-endif::[]
 
-If the tests pass, you see output similar to the following example:
+If the test passes, you see output similar to the following example:
 
 [role="no_copy"]
 ----
@@ -338,7 +349,7 @@ Results:
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ----
 
-When you are finished with the services, run the following commands to stop and remove your containers:
+When you are finished with the service, run the following command to stop and remove your container:
 
 [.tab_link.podman_link]
 `*PODMAN*`
