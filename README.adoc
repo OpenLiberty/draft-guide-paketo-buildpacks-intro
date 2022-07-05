@@ -32,12 +32,10 @@ Learn how to build your microservices with Paketo Buildpacks and Open Liberty an
 
 == What you'll learn
 
-When building your application images for your microservices, there is often a lot of overhead that is required to construct your images, such as creating a Containerfile or Dockerfile or ensuring all dependencies are installed. 
+With `Paketo Buildpacks`, you are able to utilize `Pack CLI` to compile and create your application image with a single command and no other provided information.
+When you use the `Paketo` builder and buildpacks with the `pack build` command, then `Pack CLI` will inspect, analyze and construct your microservices into Open Containers Initiative (OCI) images.
 
-With `Paketo Buildpacks`, you are able to utilize the `Pack CLI` to compile and create your application image with a single command and no other provided information.
-When you use the `Paketo` builder and builderpacks with the `pack build` command, the `Pack CLI` will then inspect, analyze and construct your microservices into Open Containers Initiative (OCI) images.
-
-Once your microservice image is built, your are then able to deploy them in different environments in a lightweight and portable manner by using containers with preferred container manager such as `Podman` or `Docker`.
+Once your microservice image is built, then you are able to deploy them in different environments in a lightweight and portable manner by using containers and your preferred container manager such as `Podman` or `Docker`.
 
 The microservice that you'll be working with is called `system`. The `system` miroservice returns the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
@@ -162,7 +160,7 @@ After running your `pack build` command, the following output verifies that your
 Successfully built image system:1.0-SNAPSHOT
 ----
 
-Review the tables below to understand better the anatomy of the `pack build` command you used to construct your images.
+Review the tables below to better understand the anatomy of the `pack build` command you used to construct your images.
 
 The following table describes the flags supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
@@ -175,7 +173,7 @@ The following table describes the flags supplied to customize your Open Liberty 
 | --trust-builder         | Trust the provided builder.
 |===
 
-For more information and to dive deeper on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build command Documentation^]. 
+For more information on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build command Documentation^]. 
 
 The following table describes the environment variables supplied for your application image. 
 [cols="35, 100", options="header"] 
@@ -189,9 +187,13 @@ The following table describes the environment variables supplied for your applic
 
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
 
+=== Image directory structure for Paketo Buildpack images
+
+Add information abot the directory strcture being mutated from typcial structure.
+
 == Running your microservices in containers
 
-Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with which container manager you have configured with `Pack CLI`.
+Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with the container manager you have configured with `Pack CLI`.
 
 Execute the following command based on your current container manager to run your newly built image:
 [.tab_link.podman_link]
@@ -215,7 +217,7 @@ docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
 ----
 --
 
-Review the following table that describes the flags in the above commands:
+Review the following table that describes the flags in the above command:
 
 [cols="15, 100", options="header"]
 |===
