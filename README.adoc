@@ -19,12 +19,12 @@
 :page-seo-title: Building and containerizing microservices with Paketo Buildpacks 
 :page-seo-description: A getting started tutorial with examples of how to build Open Container Initiative (OCI) images with Paketo Buildpacks and deploying them in popular container managers like Docker and Podman.  
 :guide-author: Open Liberty
-= Containerizing microservices with Paketo Buildpacks and Docker
+= Building microservices with Paketo Buildpacks
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the  https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to build your microservices with Paketo Buildpacks and Open Liberty and run them in a container manager.
+Learn how to build your microservices with Paketo Buildpacks and Open Liberty then run them in a container manager.
 
 // =================================================================================================
 //  What you'll learn
@@ -32,8 +32,7 @@ Learn how to build your microservices with Paketo Buildpacks and Open Liberty an
 
 == What you'll learn
 
-With `Paketo Buildpacks`, you are able to utilize `Pack CLI` to compile and create your application image with a single command and no other provided information.
-When you use the `Paketo` builder and buildpacks with the `pack build` command, then `Pack CLI` will inspect, analyze and construct your microservices into Open Containers Initiative (OCI) images.
+With `Paketo Buildpacks`, you are able to compile and create your microservice image with a single command and no other provided information. When you use the `Pack CLI` with the `Paketo Buildpacks` the `pack build` command will inspect, analyze and constuct your Open Liberty microservice into an Open Containers Initiative (OCI) images.
 
 Once your microservice image is built, then you are able to deploy them in different environments in a lightweight and portable manner by using containers and your preferred container manager such as `Podman` or `Docker`.
 
@@ -173,7 +172,7 @@ The following table describes the flags supplied to customize your Open Liberty 
 | --trust-builder         | Trust the provided builder.
 |===
 
-For more information on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build command Documentation^]. 
+For more information on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build command documentation^]. 
 
 The following table describes the environment variables supplied for your application image. 
 [cols="35, 100", options="header"] 
@@ -274,12 +273,12 @@ After you have verifyied that your `system` service is up and running in your co
 
 [.tab_content.docker_section]
 --
-You can test your microservices manually by hitting the endpoints or with automated tests that check your running Docker container.
+You can test your microservice manually by hitting the endpoints or with automated tests that check your running Docker container.
 --
 
 [.tab_content.podman_section]
 --
-You can test your microservices manually by hitting the endpoint or with automated test that check your running `Podman` container.
+You can test your microservice manually by hitting the endpoint or with automated test that check your running `Podman` container.
 --
 
 [role="code_command hotspot file=0", subs="quotes"]
