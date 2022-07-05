@@ -187,10 +187,6 @@ The following table describes the environment variables supplied for your applic
 
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
 
-=== Image directory structure for Paketo Buildpack images
-
-Add information abot the directory strcture being mutated from typcial structure.
-
 == Running your microservices in containers
 
 Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with the container manager you have configured with `Pack CLI`.
