@@ -32,7 +32,7 @@ Learn how to build your microservices with Paketo Buildpacks and Open Liberty th
 
 == What you'll learn
 
-With `Paketo Buildpacks`, you are able to compile and create your microservice image with a single command and no other provided information. When you use the `Pack CLI` with the `Paketo Buildpacks` the `pack build` command will inspect, analyze and constuct your Open Liberty microservice into an Open Containers Initiative (OCI) images.
+With `Paketo Buildpacks`, you are able to compile and create your microservice image with a single command and no other provided information. When you use the `Pack CLI` with the `Paketo Buildpacks` the `pack build` command will inspect, analyze and constuct your Open Liberty microservice into an Open Containers Initiative (OCI) image.
 
 Once your microservice image is built, then you are able to deploy them in different environments in a lightweight and portable manner by using containers and your preferred container manager such as `Podman` or `Docker`.
 
