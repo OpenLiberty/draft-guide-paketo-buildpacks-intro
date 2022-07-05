@@ -10,7 +10,7 @@
 :page-layout: guide-multipane
 :page-duration: 15 minutes
 :page-releasedate: 2022-07-01
-:page-description: Learn how to build your microservices with Paketo and Open Liberty and run them in a container manager.
+:page-description: Learn how to build your microservices with Paketo Buildpacks and Open Liberty and run them in a container manager.
 :page-tags: ['Docker']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['docker', 'kubernetes-intro']
@@ -24,7 +24,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the  https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to build your microservices with Paketo and Open Liberty and run them in a container manager.
+Learn how to build your microservices with Paketo Buildpacks and Open Liberty and run them in a container manager.
 
 // =================================================================================================
 //  What you'll learn
@@ -32,9 +32,14 @@ Learn how to build your microservices with Paketo and Open Liberty and run them 
 
 == What you'll learn
 
-You'll learn how to build your microservices into Open Containers Initiative (OCI) images with `Paketo Buildpacks`. By specifying the buildpacks and builder to be utilized in the `pack build` command, the `Pack CLI` will construct your microservices into container images. Once your microservice image is built, your are then able to deploy them in different environments in a lightweight and portable manner by using containers with preferred container manager such as `Podman` or `Docker`.
+When building your application images for your microservices, there is often a lot of overhead that is required to construct your images, such as creating a Containerfile or Dockerfile or ensuring all dependencies are installed. 
 
-The microservice that you'll be working with is called `system`. The `system` miroservice return the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
+With `Paketo Buildpacks`, you are able to utilize the `Pack CLI` to compile and create your application image with a single command and no other provided information.
+When you use the `Paketo` builder and builderpacks with the `pack build` command, the `Pack CLI` will then inspect, analyze and construct your microservices into Open Containers Initiative (OCI) images.
+
+Once your microservice image is built, your are then able to deploy them in different environments in a lightweight and portable manner by using containers with preferred container manager such as `Podman` or `Docker`.
+
+The microservice that you'll be working with is called `system`. The `system` miroservice returns the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
 == Additional prerequisites
 
