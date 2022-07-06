@@ -32,7 +32,7 @@ Learn how to build your microservices with Paketo Buildpacks and Open Liberty th
 
 == What you'll learn
 
-You will learn to build your microservice images using the `Paketo Buildpacks`. When you use the `Pack CLI` with the `Paketo Buildpacks`, the `pack build` command will inspect, analyze and constuct your Open Liberty microservice into an Open Containers Initiative (OCI) image.
+You will learn to build your microservice images with `Paketo Buildpacks`. When you use the `Pack CLI` with the `Paketo Buildpacks`, the `pack build` command will inspect, analyze and constuct your Open Liberty microservice into an Open Containers Initiative (OCI) image.
 
 Once your microservice image is built, then you are able to deploy them in different environments in a lightweight and portable manner by using containers and your preferred container manager such as `Podman` or `Docker`.
 
@@ -113,7 +113,7 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-The default builder is the base builder used by all other commands that are run with the `Pack CLI`, in this instance we set the default builder to the `Paketo Buildpacks` builder to use the features it offers.
+The default builder is the builder used by all other commands that are run with the `Pack CLI`, in this instance, we set the default builder to the `Paketo Buildpacks` builder to use the features it offers.
 
 Set your `pack` default builder to the `Paketo Buildpacks` builder with the following command:
 [role='command']
@@ -159,7 +159,7 @@ After running your `pack build` command, the following output verifies that your
 Successfully built image system:1.0-SNAPSHOT
 ----
 
-Review the tables below to better understand the anatomy of the `pack build` command you used to construct your images.
+Review the tables below to better understand the anatomy of the `pack build` command used to construct your images.
 
 The following table describes the flags supplied to customize your Open Liberty image:
 [cols="35, 100", options="header"]
@@ -256,30 +256,20 @@ CONTAINER ID    IMAGE                   COMMAND                  CREATED        
 
 [.tab_content.docker_section]
 --
-If a problem occurs and your container exits prematurely, the container won't appear in the container list that the `docker ps` command displays. Instead, your container appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` command to view the container logs for any potential problems. Run the `docker stats system` commands to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `docker rm system` command. Rebuild your image, and start the container again.
+If a problem occurs and your container exits prematurely, the container won't appear in the container list that the `docker ps` command displays. Instead, your container will appear with an `Exited` status when they run the `docker ps -a` command. Run the `docker logs system` command to view the container logs for any potential problems. Run the `docker stats system` commands to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `docker rm system` command. Rebuild your image, and start the container again.
 --
 
 [.tab_content.podman_section]
 --
-If a problem occurs and your container exits prematurely, the container won't appear in the container list that the `podman ps` command displays. Instead, your container appear with an `Exited` status when they run the `podman ps -a` command. Run the `podman logs system` command to view the container logs for any potential problems. Run the `podman stats system` command to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `podman stop system` command. Rebuild your image, and start the container again.
+If a problem occurs and your container exits prematurely, the container won't appear in the container list that the `podman ps` command displays. Instead, your container will appear with an `Exited` status when they run the `podman ps -a` command. Run the `podman logs system` command to view the container logs for any potential problems. Run the `podman stats system` command to display a live stream of usage statistics for your container. When you find the cause of the issues, remove the faulty container with the `podman stop system` command. Rebuild your image, and start the container again.
 --
 
 // static guide instructions:
-To acces the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
-
-After you have verifyied that your `system` service is up and running in your contiainer, you are able to stop and remove your container with the following command:
+To access the `system` service, which shows the system properties of the running JVM, see `http://localhost:9080/system/properties`
 
 == Testing the microservices
 
-[.tab_content.docker_section]
---
-You can test your microservice manually by hitting the endpoints or with automated tests that check your running Docker container.
---
-
-[.tab_content.podman_section]
---
-You can test your microservice manually by hitting the endpoint or with automated test that check your running `Podman` container.
---
+You can test your microservice manually by hitting the endpoints or with automated tests that check your running container.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -320,15 +310,7 @@ docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
 ----
 --
 
-[.tab_content.docker_section]
---
-Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the service that is running in the `Docker` container by replacing the `[system-ip-address]` with the IP address that you determined previously.
---
-
-[.tab_content.podman_section]
---
-Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the service that are running in the `Podman` containers by replacing the `[system-ip-address]` with the IP address that you determined previously.
---
+Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the service that is running in the container by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
 [role='command']
 ```
@@ -376,6 +358,6 @@ docker stop system
 
 == Great work! You're done!
 
-You have just built Docker images and run two microservices on Open Liberty in containers. 
+You have just built a microservice image with `Paketo Buildpacks` and run it in a container. 
 
 include::{common-includes}/attribution.adoc[]
