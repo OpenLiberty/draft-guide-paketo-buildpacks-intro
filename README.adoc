@@ -38,9 +38,14 @@ Once your microservice image is built, then you are able to deploy them in diffe
 
 The microservice that you'll be working with is called `system`. The `system` miroservice returns the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
+The microservice you will be working is calld `system`. The `system` service returns the JVM system properties of the running container. This guide demonstrates how to build this microservice with `Paketo Buildpacks` and run them with your preferred container manager.
+
+
 == Additional prerequisites
 
 Before starting the guide, ensure that you have installed the `Pack CLI` and a container manager such as `Podman` or `Docker`. For installation of the `Pack CLI`, refer to the https://buildpacks.io/docs/tools/pack/[offical Pack documentation^] and for installation of a container manager, refer to https://podman.io/getting-started/installation[Offical Podman Documentation^] or the https://docs.docker.com/get-docker/[official Docker documentation^].
+
+Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so you are limited to using `Docker` exclusively.
 
 ///////////////////////////
 // Getting started
@@ -142,8 +147,6 @@ pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT
 [.tab_content.podman_section]
 --
 
-Currently, `Pack CLI` does not officially support building images for `Podman` on Windows, so you are limited to using `Docker` exclusively.
-
 [role='command']
 ----
 pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true system:1.0-SNAPSHOT
@@ -184,11 +187,13 @@ The following table describes the environment variables supplied for your applic
 |===
 
 
-Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty[Paketo Liberty page^]. 
+Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the
+
+https://github.com/paketo-buildpacks/liberty#configuration[Paketo Liberty page^]. 
 
 == Running your microservices in containers
 
-Now that your `system` image is built, you will now run your microservice in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with the container manager you have configured with `Pack CLI`.
+Now that your `system` image is built, you will now run it in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with whichever container manager you have configured with `Pack CLI`.
 
 Execute the following command based on your current container manager to run your newly built image:
 [.tab_link.podman_link]
@@ -269,7 +274,7 @@ To access the `system` service, which shows the system properties of the running
 
 == Testing the microservices
 
-You can test your microservice manually by hitting the endpoints or with automated tests that check your running container.
+You can test your `system` service manually by hitting the endpoints or with automated tests that check your running container.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -283,11 +288,12 @@ SystemEndpointIT.java
 include::finish/system/src/test/java/it/io/openliberty/guides/system/SystemEndpointIT.java[]
 ----
 
-The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a `200` response code from the `system` service endpoint.
+The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a `200` response code from your `system` service endpoint.
 
 === Running the tests
 
-Begin with getting the IP address of your container that is running your `system` service with the following command:
+
+Begin with getting the IP address of your `system` container by running the following command:
 
 [.tab_link.podman_link]
 `*PODMAN*`
@@ -310,7 +316,9 @@ docker inspect system -f "{{ .NetworkSettings.IPAddress }}"
 ----
 --
 
-Next, run the Maven `package` goal to compile the test classes. Run the Maven `failsafe` goal to test the service that is running in the container by replacing the `[system-ip-address]` with the IP address that you determined previously.
+Next, run the Maven `package` goal to compile the test classes. 
+
+Run the Maven `failsafe` goal to test your `system` service by replacing the `[system-ip-address]` with the IP address that you determined previously.
 
 [role='command']
 ```
@@ -333,7 +341,7 @@ Results:
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ----
 
-When you are finished with the service, run the following command to stop and remove your container:
+When you are finished with your `system` service, run the following command to stop and remove your container:
 
 [.tab_link.podman_link]
 `*PODMAN*`
@@ -358,6 +366,6 @@ docker stop system
 
 == Great work! You're done!
 
-You have just built a microservice image with `Paketo Buildpacks` and run it in a container. 
+You have just built a microservice image with `Paketo Buildpacks` and ran it in a container. 
 
 include::{common-includes}/attribution.adoc[]
