@@ -24,7 +24,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the  https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to build your microservices with Paketo Buildpacks and Open Liberty then run them in a container manager.
+Learn how to build your microservices with Paketo Buildpacks and Open Liberty then run them in containers. 
 
 // =================================================================================================
 //  What you'll learn
@@ -32,14 +32,11 @@ Learn how to build your microservices with Paketo Buildpacks and Open Liberty th
 
 == What you'll learn
 
-You will learn to build your microservice images with `Paketo Buildpacks`. When you use the `Pack CLI` with the `Paketo Buildpacks`, the `pack build` command will inspect, analyze and constuct your Open Liberty microservice into an Open Containers Initiative (OCI) image.
+You will learn to build a microservice image with `Paketo Buildpacks`. When you use the `Pack CLI` with the `Paketo Buildpacks`, the `pack build` coammnd will inspect, analyze and construct your Open Liberty microservice into an Open Containers Initiative (OCI) image.
 
-Once your microservice image is built, then you are able to deploy them in different environments in a lightweight and portable manner by using containers and your preferred container manager such as `Podman` or `Docker`.
+Once your microservice image is built, then you are able to deploy it in different environments in a lightweight and portable manner by using a container and your preferred container manager such as `Podman` or `Docker`.
 
-The microservice that you'll be working with is called `system`. The `system` miroservice returns the JVM system properties of the running container. This guide demonstrates how microservices can be built with `Paketo buildpacks` and run them with your preferred container manager.
-
-The microservice you will be working is calld `system`. The `system` service returns the JVM system properties of the running container. This guide demonstrates how to build this microservice with `Paketo Buildpacks` and run them with your preferred container manager.
-
+The microservice that you'll be working with is called `system`. The `system` miroservice returns the JVM system properties of the running container. This guide demonstrates how a microservice can be built with `Paketo buildpacks` and run them with your preferred container manager.
 
 == Additional prerequisites
 
@@ -108,7 +105,6 @@ The benefits of using `Paketo Buildpacks` with the `Pack CLI` to build your appl
 * Optimizing image size for minimal final application image.
 * Auto-detection and installation of your app's dependencies directly from it's source code.
 * Patching OS-level vulnerabilites in your images automatically upon rebuilding.
-
 
 === Setting your default builder
 
