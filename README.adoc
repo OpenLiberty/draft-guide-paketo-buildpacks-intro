@@ -136,7 +136,7 @@ Now, to begin constructing your `system` service image, run the following `pack 
 
 [role='command']
 ----
-pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java system:1.0-SNAPSHOT
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --creation-time now system:1.0-SNAPSHOT
 ----
 --
 
@@ -145,7 +145,7 @@ pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT
 
 [role='command']
 ----
-pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true system:1.0-SNAPSHOT
+pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true --creation-time now system:1.0-SNAPSHOT
 ----
 
 If you would like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
@@ -169,6 +169,7 @@ The following table describes the flags supplied to customize your Open Liberty 
 | --env                   | Enviornment variables for the `pack build` process.
 | --docker-host           | Address to docker daemon that will be exposed to build container. Use `inherit` value when the docker daemon address is set to the DOCKER_HOST environment variable.
 | --trust-builder         | Trust the provided builder.
+| --creation-time         | Time at which the build was created. Accepts a unix time stamp or `now` as values.
 |===
 
 For more information on all supported flags, view the https://buildpacks.io/docs/tools/pack/cli/pack_build/[pack build command documentation^]. 
