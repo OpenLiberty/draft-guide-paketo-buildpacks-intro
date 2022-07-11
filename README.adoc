@@ -91,7 +91,7 @@ To learn more about RESTful web services and how to build them, see https://open
 
 == Building images with Paketo buildpacks
 
-Before attempting to build your image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase images with buildpacks.
+Before attempting to build your `system` image, ensure that you have installed https://buildpacks.io/docs/tools/pack/[Pack CLI]. The `Pack CLI` tool facilitates the use of buildpacks and provides functionality to build and rebase images with buildpacks.
 
 `Paketo Buildpacks` is an open source project which provides users with production-ready buildpacks for the most popular languages and frameworks, including the Open Liberty server. A `buildpack` is a set of executables that inspects and transforms your application source code into OCI images that can be ran in nearly any container manager.
 
@@ -114,7 +114,7 @@ A `builder` in the buildpack ecosystem, is an image comprised of three parts:
 * A stack, which provides the OS layer for your appliation image.
 * A lifecycle which analyzes, detects and assembles your final application image.
 
-The default builder is the builder used by all other commands that are run with the `Pack CLI`, in this instance, we set the default builder to the `Paketo Buildpacks` builder to use the features it offers.
+The default builder is the builder used by all other commands that are run with the `Pack CLI`, in this instance, you will set the default builder to the `Paketo Buildpacks` builder to use the features it offers.
 
 Set your `pack` default builder to the `Paketo Buildpacks` builder with the following command:
 [role='command']
@@ -152,7 +152,7 @@ If you would like to try building your images for `Podman` but have your `Pack C
 
 --
 
-After running your `pack build` command, the following output verifies that your image can now be ran in a container:
+After running your `pack build` command, the following output verifies that your `system` image can now be ran in a container:
 [source, role='no_copy']
 ----
 Successfully built image system:1.0-SNAPSHOT
@@ -183,13 +183,11 @@ The following table describes the environment variables supplied for your applic
 |===
 
 
-Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the
-
-https://github.com/paketo-buildpacks/liberty#configuration[Paketo Liberty page^]. 
+Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty#configuration[Paketo Liberty page^]. 
 
 == Running your microservices in containers
 
-Now that your `system` image is built, you will now run it in a container. Since the final images that are generated from `Pack CLI` are Open Containers Initiative (OCI) images, they are compatible with whichever container manager you have configured with `Pack CLI`.
+Now that your `system` image is built, you will now run it in a container. Since the final image generated from `Pack CLI` is an Open Containers Initiative (OCI) image, it is compatible with whichever container manager you have configured with `Pack CLI`.
 
 Execute the following command based on your current container manager to run your newly built image:
 [.tab_link.podman_link]
@@ -270,7 +268,7 @@ To access the `system` service, which shows the system properties of the running
 
 == Testing the microservices
 
-You can test your `system` service manually by hitting the endpoints or with automated tests that check your running container.
+You can test your `system` service manually by hitting the endpoint or with automated test that checks your running container.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
