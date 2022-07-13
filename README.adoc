@@ -188,12 +188,12 @@ Explore all of the flags, variables and options available for the Paketo Liberty
 
 === Understanding the image structure 
 
-When building your Open Liberty image with `Podman` or `Docker` the structure of te image is similar to the following:
+When building your Open Liberty image with `Podman` or `Docker` the structure of the image is similar to the following:
 
 * `/opt/ol/wlp` contains the Liberty runtime.
 * `/config` contains the server configuration.
 
-This strucutre is typcially expected if you are familiar with building Open Liberty images. Although, when using `Paketo Buildpacks`, the image takes a much different structure. The `Paketo Buildpacks` structure is as follows:
+This structure is expected if you are familiar with building Open Liberty images. Although, when using `Paketo Buildpacks`, the image takes a different structure. An example of the `Paketo Buildpacks` structure is as follows:
 
 * `/layers/paketo-buildpacks_liberty/open-liberty-runtime-kernel` contains the Liberty runtime.
 * `/layers/paketo-buildpacks_liberty/open-liberty-runtime-kernel/usr/servers/defaultServe` contains the server configuration.
