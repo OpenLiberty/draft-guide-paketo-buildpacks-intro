@@ -193,14 +193,14 @@ When building your Open Liberty image with `Podman` or `Docker` the structure of
 * `/opt/ol/wlp` contains the Liberty runtime.
 * `/config` contains the server configuration.
 
-This strucutre is something that is typcially expected if you are familiar with building Open Liberty images. Although, when using `Paketo Buildpacks`, the image takes a much different structure. The `Paketo Buildpacks` strucutre is as follows:
+This strucutre is typcially expected if you are familiar with building Open Liberty images. Although, when using `Paketo Buildpacks`, the image takes a much different structure. The `Paketo Buildpacks` structure is as follows:
 
 * `/layers/paketo-buildpacks_liberty/open-liberty-runtime-kernel` contains the Liberty runtime.
 * `/layers/paketo-buildpacks_liberty/open-liberty-runtime-kernel/usr/servers/defaultServe` contains the server configuration.
 
-Notice how all of the files have been placed under the `/layers` director. This is because `Buildpacks` do not run as `root`, so the `cnb` user/group is created and uses the `/layers` directory as the location that `Buildpacks` are able to write to.
+Notice how all of the files have been placed under the `/layers` directory. This is because `Buildpacks` do not run as `root`, so the `cnb` user/group is created and uses the `/layers` directory as the location that `Buildpacks` are able to write to.
 
-To find out more information on the structure of your image, refer to the https://github.com/buildpacks/spec/blob/main/buildpack.md[Buildpack Interface Specification page^]. Otherwise, continue with the guide to run your newly built image.
+To find out more information on the structure of your image, refer to the https://github.com/buildpacks/spec/blob/main/buildpack.md[Buildpack Interface Specification page^]. Otherwise, continue with the guide to run your `system` image.
 
 == Running your microservices in containers
 
