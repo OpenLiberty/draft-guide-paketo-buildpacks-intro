@@ -186,6 +186,22 @@ The following table describes the environment variables supplied for your applic
 
 Explore all of the flags, variables and options available for the Paketo Liberty buildpack on the https://github.com/paketo-buildpacks/liberty#configuration[Paketo Liberty page^]. 
 
+=== Understanding the image structure 
+
+When building your Open Liberty image with `Podman` or `Docker` the structure of the image is similar to the following example:
+
+* `/opt/ol/wlp` contains the Liberty runtime.
+* `/config` contains the server configuration.
+
+This structure is expected if you are familiar with building Open Liberty images. Although, when using `Paketo Buildpacks`, the image takes a different structure. An example of the `Paketo Buildpacks` structure is as follows:
+
+* `/layers/paketo-buildpacks_liberty/open-liberty-runtime-kernel` contains the Liberty runtime.
+* `/layers/paketo-buildpacks_liberty/open-liberty-runtime-kernel/usr/servers/defaultServer` contains the server configuration.
+
+Notice how all of the files have been placed under the `/layers` directory. This is because `Buildpacks` do not run as `root`, so the `cnb` user/group is created and uses the `/layers` directory as the location that `Buildpacks` are able to write to.
+
+To find out more information on the structure of your image, refer to the https://github.com/buildpacks/spec/blob/main/buildpack.md[Buildpack Interface Specification page^]. Otherwise, continue with the guide to run your `system` image.
+
 == Running your microservices in containers
 
 Now that your `system` image is built, you will now run it in a container. Since the final image generated from `Pack CLI` is an Open Containers Initiative (OCI) image, it is compatible with whichever container manager you have configured with `Pack CLI`.
