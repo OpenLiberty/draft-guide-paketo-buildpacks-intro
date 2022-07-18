@@ -32,7 +32,7 @@ Learn how to build your microservices with Paketo Buildpacks and Open Liberty th
 
 == What you'll learn
 
-You will learn to build a microservice image with `Paketo Buildpacks`. When you use the `Pack CLI` with the `Paketo Buildpacks`, the `pack build` coammnd will inspect, analyze and construct your Open Liberty microservice into an Open Containers Initiative (OCI) image.
+You will learn to build a microservice image with `Paketo Buildpacks`. When you use the `Pack CLI` with the `Paketo Buildpacks`, the `pack build` command will inspect, analyze and construct your Open Liberty microservice into an Open Containers Initiative (OCI) image.
 
 Once your microservice image is built, then you are able to deploy it in different environments in a lightweight and portable manner by using a container and your preferred container manager such as `Podman` or `Docker`.
 
@@ -301,7 +301,6 @@ include::finish/system/src/test/java/it/io/openliberty/guides/system/SystemEndpo
 The [hotspot=testGetProperties file=0]`testGetProperties()` method checks for a `200` response code from your `system` service endpoint.
 
 === Running the tests
-
 
 Begin with getting the IP address of your `system` container by running the following command:
 
