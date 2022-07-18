@@ -61,7 +61,7 @@ You can find the starting Java project in the `start` directory. This project co
 To try out the microservice by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
 [role='command']
 ----
-mvn system liberty:run
+mvn liberty:run
 ----
 
 After you see the following message in the command-line session, your service is ready:
