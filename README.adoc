@@ -56,12 +56,12 @@ include::{common-includes}/gitclone.adoc[]
 // static guide instructions:
 Navigate to the `start` directory to begin.
 
-You can find the starting Java project in the `start` directory. This project contains a microservice called `system`, which can be found in the corresponding directory, `system`.
+You can find the starting Java project in the `start` directory. This project contains a microservice called `system`.
 
 To try out the microservice by using Maven, run the following Maven goal to build the `system` microservice and run it inside Open Liberty:
 [role='command']
 ----
-mvn -pl system liberty:run
+mvn ssystem liberty:run
 ----
 
 After you see the following message in the command-line session, your service is ready:
@@ -77,10 +77,10 @@ To access the `system` service, which shows the system properties of the running
 After you are finished checking out the `system` service, stop the Open Liberty server by pressing `CTRL+C` in the command-line session where you ran the server. Alternatively, you can run the `liberty:stop` goal in another command-line session:
 [role='command']
 ----
-mvn -pl system liberty:stop
+mvn liberty:stop
 ----
 
-To package your microservice, run the `mvn package` goal to build the application `.war` files from the start directory so that the `.war` file is in the `system/target` directory.
+To package your microservice, run the `mvn package` goal to build the application `.war` files from the start directory so that the `.war` file is in the `target` directory.
 
 [role='command']
 ----
@@ -136,7 +136,7 @@ Now, to begin constructing your `system` service image, run the following `pack 
 
 [role='command']
 ----
-pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --creation-time now system:1.0-SNAPSHOT
+pack build --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --creation-time now system:1.0-SNAPSHOT
 ----
 --
 
@@ -145,7 +145,7 @@ pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT
 
 [role='command']
 ----
-pack build --path ./system --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true --creation-time now system:1.0-SNAPSHOT
+pack build --env BP_JAVA_APP_SERVER=liberty --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" --env BP_LIBERTY_PROFILE=jakartaee9 --buildpack paketo-buildpacks/eclipse-openj9 --buildpack paketo-buildpacks/java --docker-host=inherit --trust-builder=true --creation-time now system:1.0-SNAPSHOT
 ----
 
 If you would like to try building your images for `Podman` but have your `Pack CLI` configured for `Docker`, then refer to the https://buildpacks.io/docs/app-developer-guide/building-on-podman/#usage[Build with Podman^] page in the `Pack CLI` documentation.
@@ -164,7 +164,6 @@ The following table describes the flags supplied to customize your Open Liberty 
 [cols="35, 100", options="header"]
 |===
 | *Flag*                  | *Description*
-| --path                  | Relative path to your application source code.
 | --buildpack             | Buildpack to be included in the OCI build process.
 | --env                   | Enviornment variables for the `pack build` process.
 | --docker-host           | Address to docker daemon that will be exposed to build container. Use `inherit` value when the docker daemon address is set to the DOCKER_HOST environment variable.
