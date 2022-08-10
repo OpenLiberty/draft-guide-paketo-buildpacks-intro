@@ -33,3 +33,27 @@ mvn -Dhttp.keepAlive=false \
     failsafe:integration-test liberty:stop
 mvn failsafe:verify
 
+sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
+sudo apt-get update
+sudo apt-get install pack-cli
+
+pack config default-builder gcr.io/paketo-buildpacks/builder:base
+
+pack build \
+  --env BP_JAVA_APP_SERVER=liberty \
+  --env BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*" \
+  --env BP_LIBERTY_PROFILE=jakartaee9 \
+  --buildpack paketo-buildpacks/eclipse-openj9 \
+  --buildpack paketo-buildpacks/java \
+  --creation-time now system:1.0-SNAPSHOT
+
+docker images
+
+docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
+
+if curl "http://localhost:9080/system/properties" | grep "os.name" ; then exit $?; fi
+
+docker stop system
+
+
+
