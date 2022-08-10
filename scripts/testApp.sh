@@ -53,8 +53,10 @@ docker run --rm -d --name system -p 9080:9080 system:1.0-SNAPSHOT
 
 sleep 20
 
-docker logs system
+docker logs system | grep java
 
 curl "http://localhost:9080/system/properties" | grep os.name || exit 1
 
 docker stop system
+
+docker ps
